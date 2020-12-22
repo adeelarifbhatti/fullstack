@@ -1,0 +1,26 @@
+version: "2.0"
+services:
+
+ node-adeel2:
+  build:
+   context: .
+   dockerfile: Dockerfile
+  volumes:
+   - ./public:/usr/src/app/public
+   - ./fake-data:/usr/src/app/fake-data
+   #//- ./public/lib/bootstrap/dist/css/bootstrap.min.css:/usr/src/app/public/lib/bootstrap/dist/css/bootstrap.min.css
+   - ./app.js:/usr/src/app/app.js
+  ports:
+   - "80:5000"
+  links:
+   - my-mongo
+  depends_on:
+   - my-mongo
+   
+
+
+ my-mongo:
+  image: mongo
+  ports:
+   - "27107:27107" 
+

@@ -1,0 +1,33 @@
+{
+  "name": "app-2",
+  "version": "1.0.0",
+  "description": "full-stack",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "nodemon app.js"
+
+  },
+   "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adeelarifbhatti/fullstack.git"
+  },
+  "keywords": [
+    "fullstack"
+  ],
+  "author": "Adeel Arif Bhatti",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adeelarifbhatti/fullstack/issues"
+  },
+  "homepage": "https://github.com/adeelarifbhatti/fullstack#readme"
+,
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+    "dependencies": {
+    "express": "^4.17.1"
+  }
+}
