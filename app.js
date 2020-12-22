@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 
 const app = express();
+app.use(express.json());
 /*app.get('/', (req,res)=> {
 res.status(200).send("Hellp from server side");
 });
@@ -15,7 +16,7 @@ app.post('/', (req,res)=> {
 res.status(200).send("You can post here");
 });*/
 
-const courses = JSON.parse(fs.readFileSync(`${__dirname}/fake-data/data/tours.json`)
+const courses = JSON.parse(fs.readFileSync(`${__dirname}/fake-data/data/courses.json`)
 	);
 app.get('/api/v1/courses',(req,res) =>{
 	res.status(200).json({
@@ -25,6 +26,23 @@ app.get('/api/v1/courses',(req,res) =>{
 			courses
 		}
 	});
+});
+
+app.post('/api/v1/courses',(req,res) =>{
+	//console.log(res.body);
+	const newId = courses[courses.length -1].id + 1;
+	const newCourse = Object.assign({id: newId}, req.body);
+	courses.push(newCourse);
+	fs.writeFile(`${__dirname}/fake-data/data/courses.json`, JSON.stringify(courses),
+		err => {
+			res.status(201).json({
+				status: 'success',
+				data: {
+					course: newCourse
+				}
+			});
+
+		});
 });
 const port = 5000; 
 app.listen(port, () => {
