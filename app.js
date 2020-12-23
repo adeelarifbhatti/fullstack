@@ -17,7 +17,7 @@ res.status(200).send("You can post here");
 });*/
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/fake-data/data/courses.json`)
 	);
-app.get('/api/v1/courses',(req,res) =>{
+const getCourses = (req,res) =>{
 	res.status(200).json({
 		status: 'success',
 		results: courses.length,
@@ -25,8 +25,8 @@ app.get('/api/v1/courses',(req,res) =>{
 			courses
 		}
 	});
-});
-app.post('/api/v1/courses',(req,res) =>{
+};
+const addCourse = (req,res) =>{
 	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
 	const newCourse = Object.assign({id: newId}, req.body);
@@ -41,8 +41,8 @@ app.post('/api/v1/courses',(req,res) =>{
 			});
 
 		});
-});
-app.get('/api/v1/courses/:id', (req,res) => {
+};
+const getOneCourse = (req,res) => {
 	console.log(req.params);
 	const id = req.params.id * 1;
 
@@ -59,7 +59,12 @@ app.get('/api/v1/courses/:id', (req,res) => {
 			course
 		}
 	});
-});
+};
+/*app.get('/api/v1/courses',getCourses);
+app.post('/api/v1/courses',addCourse);
+app.get('/api/v1/courses/:id',getOneCourse);*/
+app.route('/api/v1/courses').get(getCourses).post(addCourse);
+app.route('/api/v1/courses/:id').get(getOneCourse);
 const port = 5000; 
 app.listen(port, () => {
 	console.log ("Server started on port 5000");
