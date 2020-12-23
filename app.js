@@ -60,11 +60,78 @@ const getOneCourse = (req,res) => {
 		}
 	});
 };
+const deleteCourse = (req,res) => {
+	if( req.params.id * 1 > courses.length){
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid ID'
+		});
+	}
+	res.status(204).json({
+		status: 'success',
+		data: null
+	});
+};
+const updateCourse = (req,res) => {
+	if(!course){
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid ID'
+		});
+	}
+	res.status(204).json({
+		status: 'success',
+		data: null
+	});
+}; 
+const getStudents = (req,res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This is not implemented yet'
+	});
+};
+const addStudent = (req,res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This is not implemented yet'
+	});
+};
+const getOnestudent = (req,res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This is not implemented yet'
+	});
+};
+const deleteStudent = (req,res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This is not implemented yet'
+	});
+};
+const updateStudent = (req,res) => {
+	res.status(500).json({
+		status: 'error',
+		message: 'This is not implemented yet'
+	});
+};
 /*app.get('/api/v1/courses',getCourses);
 app.post('/api/v1/courses',addCourse);
 app.get('/api/v1/courses/:id',getOneCourse);*/
-app.route('/api/v1/courses').get(getCourses).post(addCourse);
-app.route('/api/v1/courses/:id').get(getOneCourse);
+app.route('/api/v1/courses')
+	.get(getCourses)
+	.post(addCourse);
+app.route('/api/v1/courses/:id')
+	.get(getOneCourse)
+	.delete(deleteCourse)
+	.patch(updateCourse);
+
+app.route('/api/v1/students')
+	.get(getStudents)
+	.post(addStudent);
+app.route('/api/v1/student/:id')
+	.get(getOnestudent)
+	.delete(deleteStudent)
+	.patch(updateStudent);
 const port = 5000; 
 app.listen(port, () => {
 	console.log ("Server started on port 5000");
