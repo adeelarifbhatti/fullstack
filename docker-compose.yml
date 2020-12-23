@@ -6,8 +6,7 @@ services:
    context: .
    dockerfile: Dockerfile
   volumes:
-   - ./public:/usr/src/app/public
-   - ./fake-data:/usr/src/app/fake-data
+   - ./src:/usr/src/app/src
    #//- ./public/lib/bootstrap/dist/css/bootstrap.min.css:/usr/src/app/public/lib/bootstrap/dist/css/bootstrap.min.css
    - ./app.js:/usr/src/app/app.js
   ports:
