@@ -15,7 +15,6 @@ res.status(200).json({message: "Hello from server side"});
 app.post('/', (req,res)=> {
 res.status(200).send("You can post here");
 });*/
-
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/fake-data/data/courses.json`)
 	);
 app.get('/api/v1/courses',(req,res) =>{
@@ -27,7 +26,6 @@ app.get('/api/v1/courses',(req,res) =>{
 		}
 	});
 });
-
 app.post('/api/v1/courses',(req,res) =>{
 	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
@@ -43,6 +41,24 @@ app.post('/api/v1/courses',(req,res) =>{
 			});
 
 		});
+});
+app.get('/api/v1/courses/:id', (req,res) => {
+	console.log(req.params);
+	const id = req.params.id * 1;
+
+	const course = courses.find(el => el.id === id);
+	if(!course){
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid ID'
+		});
+	}
+	res.status(200).json({
+		status: 'success',
+		data: {
+			course
+		}
+	});
 });
 const port = 5000; 
 app.listen(port, () => {
