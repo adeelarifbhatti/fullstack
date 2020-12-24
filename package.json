@@ -2,12 +2,12 @@
   "name": "app-2",
   "version": "1.0.0",
   "description": "full-stack",
-  "main": "app.js",
+  "main": "src/app.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon src/server.js"
 
   },
    "repository": {
