@@ -1,5 +1,25 @@
 const fs = require('fs');
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));
+
+exports.checkCourseId = (req,res,next,id) => {
+		if( req.params.id * 1 > courses.length){
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid ID'
+		});
+	};
+	next();
+};
+
+exports.checkCourseProperties = (req,res,next) => {
+		if(!req.body.name || !req.body.difficulty || !req.body.duration){
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Invalid name or difficulty or duration'
+		});
+	};
+	next();
+};
 exports.getCourses = (req,res) => {
 	res.status(200).json({
 		status: 'success',
@@ -30,12 +50,7 @@ exports.getOneCourse = (req,res) => {
 	const id = req.params.id * 1;
 
 	const course = courses.find(el => el.id === id);
-	if(!course){
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID'
-		});
-	}
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -44,24 +59,14 @@ exports.getOneCourse = (req,res) => {
 	});
 };
 exports.deleteCourse = (req,res) => {
-	if( req.params.id * 1 > courses.length){
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID'
-		});
-	}
+
 	res.status(204).json({
 		status: 'success',
 		data: null
 	});
 };
 exports.updateCourse = (req,res) => {
-	if(!course){
-		return res.status(404).json({
-			status: 'fail',
-			message: 'Invalid ID'
-		});
-	}
+
 	res.status(204).json({
 		status: 'success',
 		data: null
