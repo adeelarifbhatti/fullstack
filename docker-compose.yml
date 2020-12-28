@@ -20,5 +20,5 @@ services:
  my-mongo:
   image: mongo
   ports:
-   - "27107:27107" 
+   - "27017:27017" 
 

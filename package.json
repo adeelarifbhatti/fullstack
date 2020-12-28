@@ -29,6 +29,7 @@
   },
     "dependencies": {
     "dotenv": "^8.2.0",
+    "mongoose": "^5.11.8",
     "express": "^4.17.1"
   }
 }
