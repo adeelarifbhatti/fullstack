@@ -5,10 +5,11 @@ const mongoose = require('mongoose');
 //dotenv.config({ path: './config.env' });
 
 const app = require('./app');
-const DB = process.env.DATABASE_LOCAL
+
 /*const DB = process.env.DATABASE.replace('<PASSWORD>',
 	process.env.DATABASE_PASSWORD);
 	*/
+// config.env	mongoose.connect('process.env.DATABASE_LOCAL'
 mongoose.connect('mongodb://my-mongo:27017/StudySystem', {
 	useNewUrlParser: true,
 	useCreateIndex: true,
