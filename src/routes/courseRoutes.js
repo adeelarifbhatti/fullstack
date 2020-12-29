@@ -7,7 +7,7 @@ router.param('id',(req,res,next,identity)=>{
 	console.log(`course id is ${identity}`);
 	next();
 });
-router.param('id', courseController.checkCourseId);
+//router.param('id', courseController.checkCourseId);
 
 router.route('/')
 	.get(courseController.getCourses)

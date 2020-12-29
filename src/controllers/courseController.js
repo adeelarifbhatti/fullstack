@@ -1,6 +1,8 @@
-const fs = require('fs');
-const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));
+//const fs = require('fs');
+//const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));
 
+const Course = require('./../models/courseModel');
+/*
 exports.checkCourseId = (req,res,next,id) => {
 		if( req.params.id * 1 > courses.length){
 		return res.status(404).json({
@@ -10,6 +12,7 @@ exports.checkCourseId = (req,res,next,id) => {
 	};
 	next();
 };
+*/
 
 exports.checkCourseProperties = (req,res,next) => {
 		if(!req.body.name || !req.body.difficulty || !req.body.duration){
