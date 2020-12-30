@@ -11,7 +11,8 @@ router.param('id',(req,res,next,identity)=>{
 
 router.route('/')
 	.get(courseController.getCourses)
-	.post(courseController.checkCourseProperties, courseController.addCourse);
+	//.post(courseController.checkCourseProperties
+	.post(courseController.addCourse);
 router.route('/:id')
 	.get(courseController.getOneCourse)
 	.delete(courseController.deleteCourse)

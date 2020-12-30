@@ -14,7 +14,7 @@ exports.checkCourseId = (req,res,next,id) => {
 };
 */
 
-exports.checkCourseProperties = (req,res,next) => {
+/*exports.checkCourseProperties = (req,res,next) => {
 		if(!req.body.name || !req.body.difficulty || !req.body.duration){
 		return res.status(404).json({
 			status: 'fail',
@@ -22,7 +22,7 @@ exports.checkCourseProperties = (req,res,next) => {
 		});
 	};
 	next();
-};
+};*/
 exports.getCourses = (req,res) => {
 	res.status(200).json({
 		status: 'success',
