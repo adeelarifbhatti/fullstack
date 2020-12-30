@@ -80,7 +80,7 @@ exports.addCourse = async (req,res) =>{
 };
 exports.getOneCourse = async (req,res) => {
 	try {
-	const course = await courses.findById(req.params.id);
+	const course = await Course.findById(req.params.id);
 
 	res.status(200).json({
 		status: 'success',
@@ -104,10 +104,24 @@ exports.deleteCourse = (req,res) => {
 		data: null
 	});
 };
-exports.updateCourse = (req,res) => {
+exports.updateCourse =  async (req,res) => {
+	try{
+		const course = await Course.findByIdAndUpdate(req.params.id, 
+			req.body,{ new: true, runValidators: true});
 
-	res.status(204).json({
+		res.status(200).json({
 		status: 'success',
-		data: null
+		data: {
+			course: course
+		}
 	});
+	}
+	catch(err){
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
+
 };
