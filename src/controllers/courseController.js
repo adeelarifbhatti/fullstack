@@ -97,12 +97,25 @@ exports.getOneCourse = async (req,res) => {
 		});
 	}
 };
-exports.deleteCourse = (req,res) => {
+exports.deleteCourse = async (req,res) => {
 
-	res.status(204).json({
+	try{
+		const course = await Course.findByIdAndDelete(req.params.id);
+
+		res.status(204).json({
 		status: 'success',
-		data: null
+		data: {
+			course: null
+		}
 	});
+	}
+	catch(err){
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
 };
 exports.updateCourse =  async (req,res) => {
 	try{
