@@ -23,14 +23,25 @@ exports.checkCourseId = (req,res,next,id) => {
 	};
 	next();
 };*/
-exports.getCourses = (req,res) => {
-	res.status(200).json({
+exports.getCourses = async (req,res) => {
+	try{
+		const courses = await Course.find();
+		res.status(200).json({
 		status: 'success',
 		results: courses.length,
 		data: {
 			courses
 		}
 	});
+	}
+	catch(err){
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
+
 };
 exports.addCourse = (req,res) =>{
 	//console.log(res.body);
@@ -48,11 +59,9 @@ exports.addCourse = (req,res) =>{
 
 		});
 };
-exports.getOneCourse = (req,res) => {
-	console.log(req.params);
-	const id = req.params.id * 1;
-
-	const course = courses.find(el => el.id === id);
+exports.getOneCourse = async (req,res) => {
+	try {
+	const course = await courses.findById(req.params.id);
 
 	res.status(200).json({
 		status: 'success',
@@ -60,6 +69,14 @@ exports.getOneCourse = (req,res) => {
 			course
 		}
 	});
+	}
+	catch(err){
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
 };
 exports.deleteCourse = (req,res) => {
 
