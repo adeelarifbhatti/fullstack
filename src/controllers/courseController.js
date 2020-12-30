@@ -43,8 +43,27 @@ exports.getCourses = async (req,res) => {
 	}
 
 };
-exports.addCourse = (req,res) =>{
-	//console.log(res.body);
+exports.addCourse = async (req,res) =>{
+	//const newCourse = awaits Course.create(req.body);
+	try{
+		const newCourse =  new Course(req.body);
+	await newCourse.save();
+	res.status(200).json({
+		ststus: 'success',
+		data: {
+		course: newCourse
+		}
+	});
+	}
+	catch(err){
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
+
+/*	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
 	const newCourse = Object.assign({id: newId}, req.body);
 	courses.push(newCourse);
@@ -57,7 +76,7 @@ exports.addCourse = (req,res) =>{
 				}
 			});
 
-		});
+		});*/
 };
 exports.getOneCourse = async (req,res) => {
 	try {
