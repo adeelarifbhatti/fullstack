@@ -29,10 +29,16 @@ exports.getCourses = async (req,res) => {
 		const queryObj = {...req.query};
 		const excludingValues = ['page','sort','limit','fields'];
 		excludingValues.forEach(el=>delete queryObj[el]);
+		//converting the javascript object to string
+		let qString = JSON.stringify(queryObj);
+		//regex for changing the gte to $gte
+		qString = qString.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+		console.log("#####Query in the URL ######  ", req.query, queryObj, qString);
+		// JSON.parse(qString) will convert the text in to javascript object
+		const query =  Course.find(JSON.parse(qString));
 
-		const query =  Course.find(queryObj);
 		const courses = await query;
-		console.log(req.query, queryObj);
+
 		res.status(200).json({
 		status: 'success',
 		results: courses.length,
