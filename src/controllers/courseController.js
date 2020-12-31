@@ -26,19 +26,32 @@ exports.checkCourseId = (req,res,next,id) => {
 exports.getCourses = async (req,res) => {
 
 	try{
+		// editing the query
 		const queryObj = {...req.query};
 		const excludingValues = ['page','sort','limit','fields'];
 		excludingValues.forEach(el=>delete queryObj[el]);
+
 		//converting the javascript object to string
 		let qString = JSON.stringify(queryObj);
 		//regex for changing the gte to $gte
 		qString = qString.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 		console.log("#####Query in the URL ######  ", req.query, queryObj, qString);
+
 		// JSON.parse(qString) will convert the text in to javascript object
-		const query =  Course.find(JSON.parse(qString));
+		let query =  Course.find(JSON.parse(qString));
+		// Sorting
+		if (req.query.sort){
+			console.log("## Sorting########### ",req.query.sort);
+			const sortBy = req.query.sort.split(',').join(' ');
+			query = query.sort(sortBy);
+			console.log("## Sorting########### ",sortBy);
+		}
+		//default sorting
+		else {
+			query = query.sort('-duration');
+		}
 
 		const courses = await query;
-
 		res.status(200).json({
 		status: 'success',
 		results: courses.length,
