@@ -24,8 +24,15 @@ exports.checkCourseId = (req,res,next,id) => {
 	next();
 };*/
 exports.getCourses = async (req,res) => {
+
 	try{
-		const courses = await Course.find();
+		const queryObj = {...req.query};
+		const excludingValues = ['page','sort','limit','fields'];
+		excludingValues.forEach(el=>delete queryObj[el]);
+
+		const query =  Course.find(queryObj);
+		const courses = await query;
+		console.log(req.query, queryObj);
 		res.status(200).json({
 		status: 'success',
 		results: courses.length,
