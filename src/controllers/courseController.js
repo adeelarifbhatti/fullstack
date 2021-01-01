@@ -50,7 +50,7 @@ exports.getCourses = async (req,res) => {
 		else {
 			query = query.sort('-duration');
 		}
-		
+
 		//Fields
 		if(req.query.fields){
 			const fields = req.query.fields.split(',').join(' ');
@@ -58,6 +58,19 @@ exports.getCourses = async (req,res) => {
 		}
 		else{
 			query = query.select('-__v');
+		}
+		// multiplying will convert to number
+		const page = req.query.page * 1 || 1;
+		const limit = req.query.limit * 1 || 4;
+		const skip = (page - 1) * limit;
+
+		query = query.skip(skip).limit(limit);
+
+		if(req.query.page){
+			const  numCourses = await Course.countDocuments();
+			console.log("numCourses ", numCourses, "skip ", skip );
+			if(skip > numCourses) throw new Error('This page does not exist');
+
 		}
 
 		const courses = await query;
