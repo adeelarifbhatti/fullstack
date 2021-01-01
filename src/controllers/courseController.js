@@ -23,6 +23,11 @@ exports.checkCourseId = (req,res,next,id) => {
 	};
 	next();
 };*/
+exports.topDuration = async (req,res,next) => {
+	req.query.limit = 2;
+	req.query.sort = '-duration';
+	next();
+}
 exports.getCourses = async (req,res) => {
 
 	try{

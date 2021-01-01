@@ -9,6 +9,8 @@ router.param('id',(req,res,next,identity)=>{
 });
 //router.param('id', courseController.checkCourseId);
 
+router.route('/top-duration')
+	.get(courseController.topDuration, courseController.getCourses);
 router.route('/')
 	.get(courseController.getCourses)
 	//.post(courseController.checkCourseProperties
