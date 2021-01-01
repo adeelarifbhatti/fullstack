@@ -50,6 +50,15 @@ exports.getCourses = async (req,res) => {
 		else {
 			query = query.sort('-duration');
 		}
+		
+		//Fields
+		if(req.query.fields){
+			const fields = req.query.fields.split(',').join(' ');
+			query = query.select(fields);
+		}
+		else{
+			query = query.select('-__v');
+		}
 
 		const courses = await query;
 		res.status(200).json({
