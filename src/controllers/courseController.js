@@ -2,6 +2,7 @@
 //const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));
 
 const Course = require('./../models/courseModel');
+const APIFeatures = require('./../lib/queryString');
 /*
 exports.checkCourseId = (req,res,next,id) => {
 		if( req.params.id * 1 > courses.length){
@@ -23,6 +24,7 @@ exports.checkCourseId = (req,res,next,id) => {
 	};
 	next();
 };*/
+
 exports.topDuration = async (req,res,next) => {
 	req.query.limit = 2;
 	req.query.sort = '-duration';
@@ -31,7 +33,7 @@ exports.topDuration = async (req,res,next) => {
 exports.getCourses = async (req,res) => {
 
 	try{
-		// editing the query
+		/* editing the query
 		const queryObj = {...req.query};
 		const excludingValues = ['page','sort','limit','fields'];
 		excludingValues.forEach(el=>delete queryObj[el]);
@@ -44,8 +46,10 @@ exports.getCourses = async (req,res) => {
 
 		// JSON.parse(qString) will convert the text in to javascript object
 		let query =  Course.find(JSON.parse(qString));
+		*/
 		// Sorting
-		if (req.query.sort){
+
+		/*if (req.query.sort){
 			console.log("## Sorting########### ",req.query.sort);
 			const sortBy = req.query.sort.split(',').join(' ');
 			query = query.sort(sortBy);
@@ -55,17 +59,19 @@ exports.getCourses = async (req,res) => {
 		else {
 			query = query.sort('-duration');
 		}
-
+		*/
 		//Fields
-		if(req.query.fields){
+		/* if(req.query.fields){
 			const fields = req.query.fields.split(',').join(' ');
 			query = query.select(fields);
 		}
 		else{
 			query = query.select('-__v');
 		}
+		*/
+
 		// multiplying will convert to number
-		const page = req.query.page * 1 || 1;
+		/*const page = req.query.page * 1 || 1;
 		const limit = req.query.limit * 1 || 4;
 		const skip = (page - 1) * limit;
 
@@ -77,8 +83,10 @@ exports.getCourses = async (req,res) => {
 			if(skip > numCourses) throw new Error('This page does not exist');
 
 		}
-
-		const courses = await query;
+		*/
+		const features = new APIFeatures(Course.find(), req.query)
+		.editing().sorting().fields().paginate();
+		const courses = await features.query;
 		res.status(200).json({
 		status: 'success',
 		results: courses.length,
@@ -88,9 +96,11 @@ exports.getCourses = async (req,res) => {
 	});
 	}
 	catch(err){
+		console.log("##################", err);
 		res.status(404).json({
 			status: 'fail',
 			message: err
+			
 
 		});
 	}
