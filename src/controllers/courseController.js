@@ -201,3 +201,47 @@ exports.updateCourse =  async (req,res) => {
 	}
 
 };
+
+exports.getCourseStat =  async (req,res) => {
+	try{
+
+		const stats = await Course.aggregate([
+		{
+			$match: { seats: {$gte: 50}}
+		},
+		{
+			$group: {
+				_id: '$difficulty',
+				cCount: {$sum: 1},
+				avgFee: { $avg: '$fee'},
+				avgSeats: {$avg: '$seats'},
+				minFee: {$min: '$fee'},
+				maxFee: {$max: '$fee'},
+					}
+		},
+		{
+				$sort: { avgFee: 1}
+		}/*,
+		{
+			$match: {_id:{$ne: 'easy'}}
+		}
+		*/
+		]);
+		//console.log("stats ", stats);
+		res.status(200).json({
+		status: 'success',
+		data: {
+			 stats
+		}
+	});
+
+	}
+	catch(err){
+		console.log("###ERROR  ", err);
+		res.status(404).json({
+			status: 'fail',
+			message: err
+		});
+	}
+
+};
