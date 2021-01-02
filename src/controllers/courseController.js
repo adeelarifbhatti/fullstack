@@ -201,6 +201,54 @@ exports.updateCourse =  async (req,res) => {
 	}
 
 };
+exports.getBusyMonth =  async (req,res) => {
+	try{
+		const year = req.params.year * 1;
+		const plan = await Course.aggregate([
+		{
+			$unwind: '$offeredDate'
+		},
+		{
+		$match: {
+			offeredDate: {
+				$gte: new Date(`${year}-01-01`),
+				$lte: new Date(`${year}-12-31`)
+			}
+		}
+		},
+		{
+			$group: {
+				_id: {$month: '$offeredDate'},
+				cCount: {$sum: 1},
+				name: {$push: '$name'}
+			}
+		},
+		{
+			$addFields: { month:'$_id'}
+		},
+		{
+			$sort: {'cCount':1}
+		}	
+
+		]);
+
+		res.status(200).json({
+		status: 'success',
+		data: {
+			plan
+		}
+	});
+	}
+	catch(err){
+		console.log(err);
+		res.status(404).json({
+			status: 'fail',
+			message: err
+
+		});
+	}
+
+};
 
 exports.getCourseStat =  async (req,res) => {
 	try{

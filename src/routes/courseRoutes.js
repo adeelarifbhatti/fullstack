@@ -12,6 +12,9 @@ router.param('id',(req,res,next,identity)=>{
 router.route('/coursestats')
 .get(courseController.getCourseStat);
 
+router.route('/busymonth/:year')
+.get(courseController.getBusyMonth);
+
 router.route('/top-duration')
 	.get(courseController.topDuration, courseController.getCourses);
 router.route('/')
