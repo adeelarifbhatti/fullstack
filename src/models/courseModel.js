@@ -80,6 +80,11 @@ courseSchema.post(/^find/, function(doc,next){
 	console.log('time taken is', Date.now()-this.start, ' milliseconds');
 	next();
 });
+courseSchema.pre('aggregate', function(next){
+	this.pipeline().unshift({ $match: {deActivated: {$ne: true}}});
+	console.log("Pipeline is ",this.pipeline());
+	next();
+});
 courseSchema.post('save', function(course, next){
 	console.log("Slug for this course is ",this.slug);
 	next();
