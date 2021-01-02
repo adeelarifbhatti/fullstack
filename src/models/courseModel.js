@@ -11,6 +11,11 @@ const courseSchema = new mongoose.Schema({
 		type: Number,
 		required: [true,'Course duration must be entered']
 	},
+	
+	deActivated:{
+		type: Boolean,
+		default: false
+	},
 	difficulty:{
 		type: String,
 		required: [true, 'difficulty level must be selected']
@@ -62,6 +67,17 @@ courseSchema.virtual('Weeks').get(function(){
 });
 courseSchema.pre('save', function(next){
 	this.slug = slugify(this.name, {lower: true});
+	next();
+});
+
+courseSchema.pre(/^find/, function(next){
+	this.find({deActivated: {$ne: true}});
+	this.start=Date.now();
+	next();
+});
+courseSchema.post(/^find/, function(doc,next){
+	//this.find({deActivated: {$ne: true}});
+	console.log('time taken is', Date.now()-this.start, ' milliseconds');
 	next();
 });
 courseSchema.post('save', function(course, next){
