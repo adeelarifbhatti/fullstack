@@ -45,6 +45,15 @@ const courseSchema = new mongoose.Schema({
 		default: Date.now()
 	},
 	startDates: [Date]
+
+},
+{
+	toJSON: {virtuals: true},
+	toObject: {virtuals: true}
+});
+courseSchema.virtual('Weeks').get(function(){
+	return this.duration / 7;
+
 });
 const Course = mongoose.model('Course',courseSchema);
 /*
