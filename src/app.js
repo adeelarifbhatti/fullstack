@@ -33,4 +33,11 @@ app.get('/api/v1/courses/:id',getOneCourse);*/
 app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/students', studentRouter);
 
+app.all('*',(req,res,next) => {
+	res.status(404).json({
+		status: 'fail',
+		message: `${req.originalUrl} doesn't exists`
+	});
+});
+
 module.exports = app;
