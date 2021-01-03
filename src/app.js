@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const CatchErrors = require('./lib/catchErrors');
+const ErrorController = require('./controllers/errorController');
 
 const app = express();
 console.log("Environment is  ", process.env.NODE_ENV);
@@ -34,10 +36,14 @@ app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/students', studentRouter);
 
 app.all('*',(req,res,next) => {
-	res.status(404).json({
+	/*res.status(404).json({
 		status: 'fail',
 		message: `${req.originalUrl} doesn't exists`
-	});
+	});*/
+	next(new CatchErrors("Route Does not exist", 404));
+	
 });
+
+app.use(ErrorController);
 
 module.exports = app;
