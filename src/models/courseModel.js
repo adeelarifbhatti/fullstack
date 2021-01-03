@@ -5,7 +5,10 @@ const courseSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Course name is required'],
-		unique: true
+		unique: true,
+		trim: true,
+		maxlength: [15, 'Must not exceed 15 characters'],
+		minlength: [5, 'Must nto be less than 5 characters']
 	},
 	duration:{
 		type: Number,
@@ -18,7 +21,11 @@ const courseSchema = new mongoose.Schema({
 	},
 	difficulty:{
 		type: String,
-		required: [true, 'difficulty level must be selected']
+		required: [true, 'difficulty level must be selected'],
+		enum: {
+			values: ['easy','intermediate','hard'],
+			message: 'difficulty must be either easy,hard or difficulty'
+		}
 	},
 	level: {
 		type: String,
