@@ -3,6 +3,7 @@
 
 const Course = require('./../models/courseModel');
 const APIFeatures = require('./../lib/queryString');
+const tryCatch = require('./../lib/tryCatch');
 /*
 exports.checkCourseId = (req,res,next,id) => {
 		if( req.params.id * 1 > courses.length){
@@ -30,9 +31,8 @@ exports.topDuration = async (req,res,next) => {
 	req.query.sort = '-duration';
 	next();
 }
-exports.getCourses = async (req,res) => {
+exports.getCourses = tryCatch(async (req,res,next) => {
 
-	try{
 		/* editing the query
 		const queryObj = {...req.query};
 		const excludingValues = ['page','sort','limit','fields'];
@@ -94,21 +94,10 @@ exports.getCourses = async (req,res) => {
 			courses
 		}
 	});
-	}
-	catch(err){
-		console.log("##################", err);
-		res.status(404).json({
-			status: 'fail',
-			message: err
-			
-
-		});
-	}
-
-};
-exports.addCourse = async (req,res) =>{
+});
+exports.addCourse = tryCatch(async (req,res,next) =>{
 	//const newCourse = awaits Course.create(req.body);
-	try{
+
 		const newCourse =  new Course(req.body);
 	await newCourse.save();
 	res.status(200).json({
@@ -117,15 +106,6 @@ exports.addCourse = async (req,res) =>{
 		course: newCourse
 		}
 	});
-	}
-	catch(err){
-		res.status(404).json({
-			status: 'fail',
-			message: err
-
-		});
-	}
-
 /*	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
 	const newCourse = Object.assign({id: newId}, req.body);
@@ -140,9 +120,8 @@ exports.addCourse = async (req,res) =>{
 			});
 
 		});*/
-};
-exports.getOneCourse = async (req,res) => {
-	try {
+});
+exports.getOneCourse = tryCatch(async (req,res,next) => {
 	const course = await Course.findById(req.params.id);
 
 	res.status(200).json({
@@ -151,18 +130,9 @@ exports.getOneCourse = async (req,res) => {
 			course
 		}
 	});
-	}
-	catch(err){
-		res.status(404).json({
-			status: 'fail',
-			message: err
+	});
 
-		});
-	}
-};
-exports.deleteCourse = async (req,res) => {
-
-	try{
+exports.deleteCourse = tryCatch(async (req,res,next) => {
 		const course = await Course.findByIdAndDelete(req.params.id);
 
 		res.status(204).json({
@@ -171,17 +141,9 @@ exports.deleteCourse = async (req,res) => {
 			course: null
 		}
 	});
-	}
-	catch(err){
-		res.status(404).json({
-			status: 'fail',
-			message: err
+});
+exports.updateCourse =  tryCatch(async (req,res,next) => {
 
-		});
-	}
-};
-exports.updateCourse =  async (req,res) => {
-	try{
 		const course = await Course.findByIdAndUpdate(req.params.id, 
 			req.body,{ new: true, runValidators: true});
 
@@ -191,18 +153,10 @@ exports.updateCourse =  async (req,res) => {
 			course: course
 		}
 	});
-	}
-	catch(err){
-		res.status(404).json({
-			status: 'fail',
-			message: err
 
-		});
-	}
+});
+exports.getBusyMonth =  tryCatch(async (req,res,next) => {
 
-};
-exports.getBusyMonth =  async (req,res) => {
-	try{
 		const year = req.params.year * 1;
 		const plan = await Course.aggregate([
 		{
@@ -238,20 +192,10 @@ exports.getBusyMonth =  async (req,res) => {
 			plan
 		}
 	});
-	}
-	catch(err){
-		console.log(err);
-		res.status(404).json({
-			status: 'fail',
-			message: err
+	});
 
-		});
-	}
+exports.getCourseStat =  tryCatch(async (req,res,next) => {
 
-};
-
-exports.getCourseStat =  async (req,res) => {
-	try{
 
 		const stats = await Course.aggregate([
 		{
@@ -283,13 +227,4 @@ exports.getCourseStat =  async (req,res) => {
 		}
 	});
 
-	}
-	catch(err){
-		console.log("###ERROR  ", err);
-		res.status(404).json({
-			status: 'fail',
-			message: err
-		});
-	}
-
-};
+});
