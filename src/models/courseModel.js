@@ -7,7 +7,7 @@ const courseSchema = new mongoose.Schema({
 		required: [true, 'Course name is required'],
 		unique: true,
 		trim: true,
-		maxlength: [15, 'Must not exceed 15 characters'],
+		maxlength: [40, 'Must not exceed 15 characters'],
 		minlength: [5, 'Must nto be less than 5 characters']
 	},
 	duration:{
@@ -23,7 +23,7 @@ const courseSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'difficulty level must be selected'],
 		enum: {
-			values: ['easy','intermediate','hard'],
+			values: ['easy','intermediate','Hard'],
 			message: 'difficulty must be either easy,hard or difficulty'
 		}
 	},
@@ -42,6 +42,17 @@ const courseSchema = new mongoose.Schema({
 	fee: {
 		type: Number,
 		required: [true, 'Fee of the course must be entered']
+	},
+	discount: {
+		type: Number,
+		validate:{
+		validator: function(val){			
+			return val < this.fee
+
+			},
+			message: 'Discount ({VALUE}) should be less than the fee'
+
+		}
 	},
 	description: {
 		type: String,
