@@ -4,6 +4,14 @@ const castError =(err)=>{
 	const message = `invalid ${err.path}: ${err.value}. `;
 	return new catchErrors(message,400);
 };
+const duplicatevalues = (err) =>{
+		console.log(err.errmsg, "ADEEL");
+	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+
+	console.log(value, "ADEEL");
+	const message = ` Duplicate values: ${value}  . Please choose another value. `;
+	return new catchErrors(message,400);
+};
 
 	const logsForProd = (err,res) => {
 		if(err.isOperational){
@@ -37,13 +45,14 @@ const castError =(err)=>{
 
 if(process.env.NODE_ENV === 'development'){
 	let error = {...err};
-	if(err.name === 'CastError') err =	castError(err);
-		logsForDev(err,res);
+	if(error.name === 'CastError') error =	castError(err);
+	if(error.code === 11000) error =	duplicatevalues(err);
+		logsForDev(error,res);
 }
 	else if (process.env.NODE_ENV === 'production') {
 		let error = {...err};
-		if(err.name === 'CastError') err =	castError(err);
-		logsForProd(err,res);
+		if(error.name === 'CastError') error =	castError(error);
+		logsForProd(error,res);
 }
 
 
