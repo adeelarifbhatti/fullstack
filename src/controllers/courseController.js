@@ -4,6 +4,8 @@
 const Course = require('./../models/courseModel');
 const APIFeatures = require('./../lib/queryString');
 const tryCatch = require('./../lib/tryCatch');
+const catchError = require('./../lib/catchErrors');
+
 /*
 exports.checkCourseId = (req,res,next,id) => {
 		if( req.params.id * 1 > courses.length){
@@ -123,7 +125,9 @@ exports.addCourse = tryCatch(async (req,res,next) =>{
 });
 exports.getOneCourse = tryCatch(async (req,res,next) => {
 	const course = await Course.findById(req.params.id);
-
+	if(!course){
+		return next(new catchError('no Course was found', 404));
+	}
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -134,7 +138,9 @@ exports.getOneCourse = tryCatch(async (req,res,next) => {
 
 exports.deleteCourse = tryCatch(async (req,res,next) => {
 		const course = await Course.findByIdAndDelete(req.params.id);
-
+		if(!course){
+			return next(new catchError('no Course was found', 404));
+		}
 		res.status(204).json({
 		status: 'success',
 		data: {
@@ -146,6 +152,9 @@ exports.updateCourse =  tryCatch(async (req,res,next) => {
 
 		const course = await Course.findByIdAndUpdate(req.params.id, 
 			req.body,{ new: true, runValidators: true});
+		if(!course){
+			return next(new catchError('no Course was found', 404));
+		}
 
 		res.status(200).json({
 		status: 'success',
