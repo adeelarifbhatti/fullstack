@@ -1,8 +1,8 @@
 module.exports = (err, req, res, next)=>{
-const catchErrors = require('./../lib/catchErrors');
+const appErrors = require('./../lib/appErrors');
 const castError =(err)=>{
 	const message = `invalid ${err.path}: ${err.value}. `;
-	return new catchErrors(message,400);
+	return new appErrors(message,400);
 };
 const duplicatevalues = (err) =>{
 		console.log(err.errmsg, "ADEEL");
@@ -10,7 +10,7 @@ const duplicatevalues = (err) =>{
 
 	console.log(value, "ADEEL");
 	const message = ` Duplicate values: ${value}  . Please choose another value. `;
-	return new catchErrors(message,400);
+	return new appErrors(message,400);
 };
 
 	const logsForProd = (err,res) => {

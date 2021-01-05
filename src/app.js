@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const CatchErrors = require('./lib/catchErrors');
+const appErrors = require('./lib/appErrors');
 const ErrorController = require('./controllers/errorController');
 
 const app = express();
@@ -40,8 +40,8 @@ app.all('*',(req,res,next) => {
 		status: 'fail',
 		message: `${req.originalUrl} doesn't exists`
 	});*/
-	next(new CatchErrors("Route Does not exist", 404));
-	
+	next(new appErrors("Route Does not exist", 404));
+
 });
 
 app.use(ErrorController);

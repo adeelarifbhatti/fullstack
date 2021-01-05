@@ -4,7 +4,7 @@
 const Course = require('./../models/courseModel');
 const APIFeatures = require('./../lib/queryString');
 const tryCatch = require('./../lib/tryCatch');
-const catchError = require('./../lib/catchErrors');
+const catchError = require('./../lib/appErrors');
 
 /*
 exports.checkCourseId = (req,res,next,id) => {
@@ -150,7 +150,7 @@ exports.deleteCourse = tryCatch(async (req,res,next) => {
 });
 exports.updateCourse =  tryCatch(async (req,res,next) => {
 
-		const course = await Course.findByIdAndUpdate(req.params.id, 
+		const course = await Course.findByIdAndUpdate(req.params.id,
 			req.body,{ new: true, runValidators: true});
 		if(!course){
 			return next(new catchError('no Course was found', 404));
@@ -191,7 +191,7 @@ exports.getBusyMonth =  tryCatch(async (req,res,next) => {
 		},
 		{
 			$sort: {'cCount':1}
-		}	
+		}
 
 		]);
 

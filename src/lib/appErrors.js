@@ -1,4 +1,4 @@
-class CatchErrors extends Error{
+class AppErrors extends Error{
 	constructor(message, statusCode){
 	super(message);
 	this.statusCode = statusCode;
@@ -8,4 +8,4 @@ class CatchErrors extends Error{
 	}
 }
 
-module.exports = CatchErrors;
+module.exports = AppErrors;
