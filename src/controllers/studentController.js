@@ -5,6 +5,7 @@ const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/cours
 
 exports.getStudents = trycatch(async (req,res) => {
 	const student = await Student.find();
+
 	res.status(200).json({
 		status: 'sucsess',
 		data:{
