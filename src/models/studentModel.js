@@ -24,6 +24,6 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password Confirmation']
   },
 });
-const User = mongoose.model('User',userSchema);
+const Student = mongoose.model('Student',userSchema);
 
-module.exports = User;
+module.exports = Student;
