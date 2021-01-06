@@ -1,9 +1,15 @@
 module.exports = (err, req, res, next)=>{
 const appErrors = require('./../lib/appErrors');
+
 const castError =(err)=>{
 	const message = `invalid ${err.path}: ${err.value}. `;
 	return new appErrors(message,400);
 };
+
+const myJsonWebTokenError =()=>{return new appErrors('Invalid Token',400);}
+const myTokenExpiredError =()=>{return new appErrors('Expired Token',400);}
+
+
 const duplicatevalues = (err) =>{
 		console.log(err.errmsg, "ADEEL");
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
@@ -30,6 +36,7 @@ const duplicatevalues = (err) =>{
 	};
 
 	const logsForDev = (err,res) => {
+		console.log("ERROR is\n ",err, "\n END of ERROR")
 		res.status(err.statusCode).json({
 		logs: "These are from my error handling",
 		status: err.status,
@@ -40,13 +47,16 @@ const duplicatevalues = (err) =>{
 
 	};
 	console.log(err.stack);
-	err.statusCode = err.statusCode || 500;
-	err.status = err.status || 'error';
+	console.log(err.statusCode = err.statusCode || 500);
+	console.log(err.status = err.status || 'error');
 
 if(process.env.NODE_ENV === 'development'){
 	let error = {...err};
 	if(error.name === 'CastError') error =	castError(err);
 	if(error.code === 11000) error =	duplicatevalues(err);
+	if(error.name === 'JsonWebTokenError') error = myJsonWebTokenError();
+	if(error.name === 'TokenExpiredError') error = myTokenExpiredError();
+	
 		logsForDev(error,res);
 }
 	else if (process.env.NODE_ENV === 'production') {
