@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const Student = require('./../models/studentModel');
 const tryCatch = require('./../lib/tryCatch');
 const appErrors = require('./../lib/appErrors');
@@ -29,22 +30,15 @@ exports.signup = tryCatch( async (req,res,next) =>{
 
 exports.login = tryCatch(async(req,res,next) => {
   const { email, password } = req.body;
-
   //checking if email and password is there
-
   if (!email || !password) {
     return next(new appErrors('please enter the email and password',400));
   }
-
   // check if user/password is correct
-
   const currentStudent = await Student.findOne({email}).select('+password');
   if(!currentStudent || !(await currentStudent.checkPassword(password,currentStudent.password))){
-    return next(new appErrors('please enter the email and password',401))
-
+    return next(new appErrors('please enter the email and password',401));
   }
-
-
   // Send token to the client
   console.log(currentStudent);
   const token= signToken(currentStudent._id);
@@ -52,5 +46,28 @@ exports.login = tryCatch(async(req,res,next) => {
     status:'success',
     token
   });
-
 });
+
+exports.secure = tryCatch(async(req, res,next) =>{
+  let token;
+  // check if Token is there, read it
+  if(req.headers.authorization && req.headers.authorization.startsWith('student')) {
+    token = req.headers.authorization.split(' ')[1];
+    }
+    console.log(token);
+    if(!token) {
+      return  next(new appErrors('Please login in order to get access',401));
+    }
+
+  //Verify the Token
+  const decoded= await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log("Decoded.id   ",decoded.id);
+  //check if student still exists
+  const  currentStudent1 = await Student.findById(decoded.id);
+  console.log(currentStudent1)
+  if(!currentStudent1){
+    return  next(new appErrors('The token doesnt belong to this user',401));
+  }
+  //check is student changed the password after sending the token
+  next()
+;});

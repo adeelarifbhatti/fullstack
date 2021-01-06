@@ -1,5 +1,6 @@
 const express = require('express');
 const courseController = require('../controllers/courseController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
  
@@ -18,7 +19,7 @@ router.route('/busymonth/:year')
 router.route('/top-duration')
 	.get(courseController.topDuration, courseController.getCourses);
 router.route('/')
-	.get(courseController.getCourses)
+	.get(authController.secure,courseController.getCourses)
 	//.post(courseController.checkCourseProperties
 	.post(courseController.addCourse);
 router.route('/:id')

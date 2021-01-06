@@ -30,6 +30,7 @@ const studentSchema = new mongoose.Schema({
       message: "Passwords do not match"
     }
   },
+  passwordChanged: Date
 });
 studentSchema.pre('save', async function(next){
   if(!this.isModified('password')) return next();
@@ -38,6 +39,14 @@ studentSchema.pre('save', async function(next){
   next();
 });
 
+studentSchema.methods.lastChangedPassword = async function(JWTTimestamp){
+  if(this.passwordChanged){
+    const changedTimestamp = parseInt(this.passwordChanged.getTime() /1000,10);   
+    console.log(changedTimestamp, " <<< " ,JWTTimestamp);    
+  return (JWTTimestamp < changedTimestamp);
+  }
+  return false;
+}
 studentSchema.methods.checkPassword = async function(enteredPassword, studentPassword){
   return await bcrypt.compare(enteredPassword,studentPassword);
 }
