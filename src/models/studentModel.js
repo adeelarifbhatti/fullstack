@@ -39,12 +39,14 @@ studentSchema.pre('save', async function(next){
   next();
 });
 
-studentSchema.methods.lastChangedPassword = async function(JWTTimestamp){
+studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
   if(this.passwordChanged){
     const changedTimestamp = parseInt(this.passwordChanged.getTime() /1000,10);   
-    console.log(changedTimestamp, " <<< " ,JWTTimestamp);    
+    console.log(changedTimestamp, "########### <<< ###########" ,JWTTimestamp); 
+    console.log("TRUE or FALSE ####",JWTTimestamp < changedTimestamp);
   return (JWTTimestamp < changedTimestamp);
   }
+  console.log("this.passwordChanged ", this.passwordChanged);
   return false;
 }
 studentSchema.methods.checkPassword = async function(enteredPassword, studentPassword){

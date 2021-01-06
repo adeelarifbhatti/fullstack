@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 
 
 const  signToken = id => {
-  return jwt.sign({id:Student._id}, process.env.JWT_SECRET, {
+  return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE_IN
-  })
+  });
 }
 exports.signup = tryCatch( async (req,res,next) =>{
   const newStudent = await Student.create({
@@ -51,7 +51,7 @@ exports.login = tryCatch(async(req,res,next) => {
 exports.secure = tryCatch(async(req, res,next) =>{
   let token;
   // check if Token is there, read it
-  if(req.headers.authorization && req.headers.authorization.startsWith('student')) {
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
     }
     console.log(token);
@@ -60,14 +60,18 @@ exports.secure = tryCatch(async(req, res,next) =>{
     }
 
   //Verify the Token
-  const decoded= await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log("Decoded.id   ",decoded.id);
   //check if student still exists
-  const  currentStudent1 = await Student.findById(decoded.id);
-  console.log(currentStudent1)
-  if(!currentStudent1){
+  const  currentStudent = await Student.findById(decoded.id);
+  console.log(currentStudent)
+  if(!currentStudent){
     return  next(new appErrors('The token doesnt belong to this user',401));
-  }
+  };
   //check is student changed the password after sending the token
-  next()
-;});
+  if(currentStudent.lastChangedPassword(decoded.iat)){
+  return next( new appErrors('Password has been recently changed, please login again', 401));
+  }
+  req.user = currentStudent;
+  next();
+});
