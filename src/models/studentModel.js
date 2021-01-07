@@ -14,6 +14,11 @@ const studentSchema = new mongoose.Schema({
     validate: [ validator.isEmail, 'please enter your email']
   },
   photo: String,
+  role: {
+    type: String,
+    enum: ['user','admin', 'poweruser'],
+    default: 'user'
+  },
   password: {
     type: String,
     requird: [ true, 'Please type your password'],

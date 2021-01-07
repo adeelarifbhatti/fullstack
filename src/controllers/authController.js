@@ -15,7 +15,8 @@ exports.signup = tryCatch( async (req,res,next) =>{
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    passwordConfirm: req.body.passwordConfirm,
+    role: req.body.role
   });
   const token = signToken(newStudent._id);
 
@@ -73,5 +74,18 @@ exports.secure = tryCatch(async(req, res,next) =>{
   return next( new appErrors('Password has been recently changed, please login again', 401));
   }
   req.user = currentStudent;
+  console.log(currentStudent);
   next();
 });
+
+exports.limitedTo =(...roles) => {
+  return(req,res,next) => {
+    // roles ['admin','poweruser']
+    console.log("ROLES are  ",req.user.role);
+    if(!roles.includes(req.user.role)){
+      return next(new appErrors('You do not have the permission to delete the course', 403));
+
+    }
+    next();
+  };
+};

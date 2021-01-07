@@ -24,7 +24,9 @@ router.route('/')
 	.post(courseController.addCourse);
 router.route('/:id')
 	.get(courseController.getOneCourse)
-	.delete(courseController.deleteCourse)
+	.delete(authController.secure,
+		authController.limitedTo('admin', 'poweruser'),
+		courseController.deleteCourse)
 	.patch(courseController.updateCourse);
 
 module.exports = router;
