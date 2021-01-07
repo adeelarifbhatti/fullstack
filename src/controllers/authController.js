@@ -3,6 +3,8 @@ const Student = require('./../models/studentModel');
 const tryCatch = require('./../lib/tryCatch');
 const appErrors = require('./../lib/appErrors');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const sendMail = require('./../lib/email');
 
 
 
@@ -103,6 +105,28 @@ exports.lostPassword = tryCatch(async(req,res,next) =>{
 
 
   // send the link with the reset token to user's email
+  const resetpasswordURL = `${req.protocol}://${req.get('host')}/api/v1/students/resetpassword/${resetToken}`;
+
+  const message = `reset the password using this link ${resetpasswordURL}, after 15 minutes this link will be close`
+  console.log("#####exports.lostPassword##### ",resetpasswordURL);
+  try{
+  await sendMail({
+    email: student.email,
+    subject: 'Your password reset link expiring in 15 minutes',
+     message
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Token is sent to email'
+  });
+} catch(err){
+  student.resetToken =  undefined;
+  student.passwordResetExpires = undefined;
+  await student.save({validateBeforeSave: false});
+  console.log("ERROR from CATCH   ",err);
+  return next(new appErrors('A error was encountered while sending email', 500));
+
+}
 
 });
 exports.resetPassword = (req,res,next) => {
