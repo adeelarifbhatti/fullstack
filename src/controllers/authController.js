@@ -5,6 +5,7 @@ const appErrors = require('./../lib/appErrors');
 const jwt = require('jsonwebtoken');
 
 
+
 const  signToken = id => {
   return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE_IN
@@ -89,3 +90,21 @@ exports.limitedTo =(...roles) => {
     next();
   };
 };
+exports.lostPassword = tryCatch(async(req,res,next) =>{
+  // User's email address in the posted body
+  const student = await Student.findOne({email: req.body.email});
+  if(!student){
+    return next(new appErrors('This email is not registered for any student', 404));
+  }
+
+  // get created the ramdon reset token
+  const resetToken = student.passwordResetToken();
+  await student.save({validateBeforeSave: false});
+
+
+  // send the link with the reset token to user's email
+
+});
+exports.resetPassword = (req,res,next) => {
+
+}

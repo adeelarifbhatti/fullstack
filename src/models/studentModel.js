@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const studentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -35,7 +36,9 @@ const studentSchema = new mongoose.Schema({
       message: "Passwords do not match"
     }
   },
-  passwordChanged: Date
+  passwordChanged: Date,
+  resetToken: String,
+  passwordResetExpires: Date
 });
 studentSchema.pre('save', async function(next){
   if(!this.isModified('password')) return next();
@@ -53,9 +56,19 @@ studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
   }
   console.log("this.passwordChanged ", this.passwordChanged);
   return false;
-}
+};
 studentSchema.methods.checkPassword = async function(enteredPassword, studentPassword){
   return await bcrypt.compare(enteredPassword,studentPassword);
+};
+
+studentSchema.methods.passwordResetToken = function(){
+  const localResetToken = crypto.randomBytes(32).toString('hex');
+  this.resetToken = crypto.createHash('sha256').update(localResetToken).digest('hex');
+  this.passwordResetExpires = Date.now() + 10* 60 * 1000;
+  console.log("From plocalResetToken#### ",localResetToken, "  and  ",this.resetToken," \n passwordResetExpires  "
+    , this.passwordResetExpires);
+  return localResetToken;
+
 }
 const Student = mongoose.model('Student',studentSchema);
 
