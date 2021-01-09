@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const crypto = require('crypto');
 const Student = require('./../models/studentModel');
 const tryCatch = require('./../lib/tryCatch');
 const appErrors = require('./../lib/appErrors');
@@ -129,6 +130,31 @@ exports.lostPassword = tryCatch(async(req,res,next) =>{
 }
 
 });
-exports.resetPassword = (req,res,next) => {
+exports.resetPassword = tryCatch(async(req,res,next) => {
+  
+  // student based on the token
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+  // if token has expired or not
+  const student = await Student.findOne({resetToken: hashedToken,
+                passwordResetExpires: {$gt: Date.now()}
+                 });
+  if(!student){
+    return next(new appErrors('Something is wrong with the Token', 400));
+  
+  }
+  console.log("###PASSWORD  ",req.body.password, "  confirm ",req.body);
+  student.password = req.body.password;
+  student.passwordConfirm = req.body.passwordConfirm;
+  student.resetToken = undefined;
+  student.passwordResetExpires = undefined;
+  await student.save();
 
-}
+  // update passwordChanged property for the user &
+  //login Student send JWT
+  const token = signToken(student._id);
+  res.status(200).json({
+    status: 'success',
+    token
+  });
+
+  });

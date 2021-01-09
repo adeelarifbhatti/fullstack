@@ -46,6 +46,12 @@ studentSchema.pre('save', async function(next){
   this.passwordConfirm = undefined;
   next();
 });
+studentSchema.pre('save', function(next){
+  if(!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChanged = Date.now() - 1000;
+  next();
+});
 
 studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
   if(this.passwordChanged){
