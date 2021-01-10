@@ -77,7 +77,7 @@ exports.secure = tryCatch(async(req, res,next) =>{
   if(currentStudent.lastChangedPassword(decoded.iat)){
   return next( new appErrors('Password has been recently changed, please login again', 401));
   }
-  req.user = currentStudent;
+  req.student = currentStudent;
   console.log(currentStudent);
   next();
 });
@@ -158,3 +158,30 @@ exports.resetPassword = tryCatch(async(req,res,next) => {
   });
 
   });
+
+exports.updatePassword = tryCatch(async (req, res, next) => {
+console.log("inside ###################### updatePassword");
+  console.log(req.student.id);
+  // find student from collection
+  const student = await Student.findById(req.student.id).select('+password');
+
+  // check if the password typed is correct
+  if(!(await student.checkPassword(req.body.currentPassword, student.password))){
+    return next(new appErrors('Current password is not correct',401));
+  }
+
+  // update the password
+  student.password = req.body.password;
+  student.passwordConfirm = req.body.passwordConfirm;
+  // can not use the findByIDAndUpdate because password and confirm password validation wud not work
+  await student.save();
+
+  // send JWT for signing in user
+  const token = signToken(student._id);
+  res.status(200).json({
+    status: 'success',
+    token
+  });
+
+
+});
