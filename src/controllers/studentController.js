@@ -23,6 +23,18 @@ exports.getStudents = tryCatch(async (req,res) => {
 	});
 });
 
+exports.deleteMe = tryCatch(async (req,res,next)=>{
+	console.log("Inside deleteStudent ");
+	const student = await Student.findByIdAndUpdate(req.student.id, {currentStatus: false});
+	res.status(204).json({
+		status: 'success',
+		data:{
+			data: 'Student has been deleted'	
+		}
+	});
+
+});
+
 exports.updateStudentinfo = tryCatch(async (req,res,next) =>{
 	//password shoudln't be update from here
 	if(req.body.password || req.body.passwordConfirm){

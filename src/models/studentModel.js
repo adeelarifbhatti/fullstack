@@ -36,6 +36,11 @@ const studentSchema = new mongoose.Schema({
       message: "Passwords do not match"
     }
   },
+  currentStatus: {
+    type: Boolean,
+    default: true,
+    select: false
+  },
   passwordChanged: Date,
   resetToken: String,
   passwordResetExpires: Date
@@ -45,6 +50,10 @@ studentSchema.pre('save', async function(next){
   this.password = await bcrypt.hash(this.password,12);
   this.passwordConfirm = undefined;
   next();
+});
+studentSchema.pre('find', function(next){
+  this.find({active: {$ne:false}  });
+  next();  
 });
 studentSchema.pre('save', function(next){
   if(!this.isModified('password') || this.isNew) return next();

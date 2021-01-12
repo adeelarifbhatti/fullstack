@@ -10,6 +10,7 @@ router.post('/signup', authController.signup);
 router.post('/signin', authController.login);
 router.patch('/updatepassword', authController.secure, authController.updatePassword);
 router.patch('/updatestudentinfo', authController.secure, studentController.updateStudentinfo);
+router.delete('/deletestudent', authController.secure, studentController.deleteMe);
 
 
 router.route('/')
