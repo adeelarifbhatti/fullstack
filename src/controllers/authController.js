@@ -7,13 +7,30 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const sendMail = require('./../lib/email');
 
-
-
 const  signToken = id => {
   return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE_IN
   });
 }
+const sendToken =(student,statusCode,res) =>{
+  const cookieProperties = {
+    expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_IN * 24 * 60 * 60 * 1000), 
+    httpOnly: true 
+  };
+  if (process.env.NODE_ENV==='production') cookieProperties.secure=true;
+  const token = signToken(student._id);
+  res.cookie('jwt', token, cookieProperties);
+  // to remove the password so it doesn't appear in the output
+  student.password = undefined;
+  res.status(statusCode).json({
+    status: 'success',
+    token: token,
+    data: {
+      student
+    }
+
+  });
+};
 exports.signup = tryCatch( async (req,res,next) =>{
   const newStudent = await Student.create({
     name: req.body.name,
@@ -22,17 +39,16 @@ exports.signup = tryCatch( async (req,res,next) =>{
     passwordConfirm: req.body.passwordConfirm,
     role: req.body.role
   });
-  const token = signToken(newStudent._id);
-
+  sendToken(newStudent,200,res);
+ /* const token = signToken(newStudent._id);
   res.status(201).json({
     status: 'success',
     token: token,
     data: {
       user: newStudent
     }
-  });
+  }); */
 });
-
 exports.login = tryCatch(async(req,res,next) => {
   const { email, password } = req.body;
   //checking if email and password is there
@@ -45,14 +61,9 @@ exports.login = tryCatch(async(req,res,next) => {
     return next(new appErrors('please enter the email and password',401));
   }
   // Send token to the client
-  console.log(currentStudent);
-  const token= signToken(currentStudent._id);
-  res.status(200).json({
-    status:'success',
-    token
-  });
+  console.log("Inside login   ",currentStudent);
+  sendToken(currentStudent,200,res);
 });
-
 exports.secure = tryCatch(async(req, res,next) =>{
   let token;
   // check if Token is there, read it
@@ -63,13 +74,12 @@ exports.secure = tryCatch(async(req, res,next) =>{
     if(!token) {
       return  next(new appErrors('Please login in order to get access',401));
     }
-
   //Verify the Token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log("Decoded.id   ",decoded.id);
   //check if student still exists
   const  currentStudent = await Student.findById(decoded.id);
-  console.log(currentStudent)
+  console.log("Inside secure    ",currentStudent)
   if(!currentStudent){
     return  next(new appErrors('The token doesnt belong to this user',401));
   };
@@ -99,12 +109,9 @@ exports.lostPassword = tryCatch(async(req,res,next) =>{
   if(!student){
     return next(new appErrors('This email is not registered for any student', 404));
   }
-
   // get created the ramdon reset token
   const resetToken = student.passwordResetToken();
   await student.save({validateBeforeSave: false});
-
-
   // send the link with the reset token to user's email
   const resetpasswordURL = `${req.protocol}://${req.get('host')}/api/v1/students/resetpassword/${resetToken}`;
 
@@ -126,12 +133,9 @@ exports.lostPassword = tryCatch(async(req,res,next) =>{
   await student.save({validateBeforeSave: false});
   console.log("ERROR from CATCH   ",err);
   return next(new appErrors('A error was encountered while sending email', 500));
-
 }
-
 });
-exports.resetPassword = tryCatch(async(req,res,next) => {
-  
+exports.resetPassword = tryCatch(async(req,res,next) => {  
   // student based on the token
   const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
   // if token has expired or not
@@ -139,8 +143,7 @@ exports.resetPassword = tryCatch(async(req,res,next) => {
                 passwordResetExpires: {$gt: Date.now()}
                  });
   if(!student){
-    return next(new appErrors('Something is wrong with the Token', 400));
-  
+    return next(new appErrors('Something is wrong with the Token', 400));  
   }
   console.log("###PASSWORD  ",req.body.password, "  confirm ",req.body);
   student.password = req.body.password;
@@ -151,12 +154,7 @@ exports.resetPassword = tryCatch(async(req,res,next) => {
 
   // update passwordChanged property for the user &
   //login Student send JWT
-  const token = signToken(student._id);
-  res.status(200).json({
-    status: 'success',
-    token
-  });
-
+  sendToken(newStudent,201,res);
   });
 
 exports.updatePassword = tryCatch(async (req, res, next) => {
@@ -164,24 +162,17 @@ console.log("inside ###################### updatePassword");
   console.log(req.student.id);
   // find student from collection
   const student = await Student.findById(req.student.id).select('+password');
-
   // check if the password typed is correct
   if(!(await student.checkPassword(req.body.currentPassword, student.password))){
     return next(new appErrors('Current password is not correct',401));
   }
-
   // update the password
   student.password = req.body.password;
   student.passwordConfirm = req.body.passwordConfirm;
   // can not use the findByIDAndUpdate because password and confirm password validation wud not work
   await student.save();
-
   // send JWT for signing in user
-  const token = signToken(student._id);
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  sendToken(newStudent,201,res);
 
 
 });
