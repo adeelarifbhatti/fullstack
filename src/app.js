@@ -6,6 +6,7 @@ const ErrorController = require('./controllers/errorController');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const app = express();
 console.log("Environment is  ", process.env.NODE_ENV);
@@ -19,6 +20,11 @@ app.use(express.json());
 app.use(mongoSanitize());
 // data sanitization against cross site scripts
 app.use(xss());
+// preventing the parameter polution
+app.use(hpp(
+	{whitelist: ['duration','fee']}
+	)
+);
 //middleware for public files 
 app.use(express.static(`${__dirname}/public`));
 // middleware fore setting the security headers
