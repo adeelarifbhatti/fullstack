@@ -4,6 +4,8 @@ const rateLimit = require('express-rate-limit');
 const appErrors = require('./lib/appErrors');
 const ErrorController = require('./controllers/errorController');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const app = express();
 console.log("Environment is  ", process.env.NODE_ENV);
@@ -13,7 +15,11 @@ if(process.env.NODE_ENV === 'development'){
 }
 // body parser into req.body
 app.use(express.json());
-//middleware for public files
+// data sanitization against nosql query injections
+app.use(mongoSanitize());
+// data sanitization against cross site scripts
+app.use(xss());
+//middleware for public files 
 app.use(express.static(`${__dirname}/public`));
 // middleware fore setting the security headers
 app.use(helmet());
