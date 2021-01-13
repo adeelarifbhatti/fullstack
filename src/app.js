@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const appErrors = require('./lib/appErrors');
 const ErrorController = require('./controllers/errorController');
+const helmet = require('helmet');
 
 const app = express();
 console.log("Environment is  ", process.env.NODE_ENV);
@@ -10,16 +11,20 @@ console.log("Environment is  ", process.env.NODE_ENV);
 if(process.env.NODE_ENV === 'development'){
   app.use(morgan('dev'));
 }
+// body parser into req.body
 app.use(express.json());
+//middleware for public files
 app.use(express.static(`${__dirname}/public`));
-
+// middleware fore setting the security headers
+app.use(helmet());
+//middle for rate limiting
 const limiter = rateLimit({
 	max: 20,
 	windowMs: 60*60*1000,
 	message: 'Too many requests, please edit limiter in app.js'
 });
 app.use('/api',limiter);
-
+//middleware for test
 app.use((req,res,next) => {
 	req.requestTime = new Date().toISOString();
 	console.log(req.headers);
