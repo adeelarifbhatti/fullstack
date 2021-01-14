@@ -45,12 +45,14 @@ const studentSchema = new mongoose.Schema({
   resetToken: String,
   passwordResetExpires: Date
 });
+// checks if the password is being updated or not
 studentSchema.pre('save', async function(next){
   if(!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password,12);
   this.passwordConfirm = undefined;
   next();
 });
+//
 studentSchema.pre('save', function(next){
   if(!this.isModified('password') || this.isNew) return next();
 
@@ -61,6 +63,8 @@ studentSchema.pre('find', function(next){
   this.find({currentStatus: {$ne:false}  });
   next();  
 });
+//checks if the passwordChanged exists,
+// else no need to do comparison of dates
 studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
   if(this.passwordChanged){
     const changedTimestamp = parseInt(this.passwordChanged.getTime() /1000,10);   
