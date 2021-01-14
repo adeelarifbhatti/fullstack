@@ -25,7 +25,7 @@ router.route('/')
 router.route('/:id')
 	.get(courseController.getOneCourse)
 	.delete(authController.secure,
-		authController.limitedTo('admin', 'poweruser'),
+		authController.limitedTo('admin', 'teacher'),
 		courseController.deleteCourse)
 	.patch(courseController.updateCourse);
 

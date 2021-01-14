@@ -10,6 +10,13 @@ const courseSchema = new mongoose.Schema({
 		maxlength: [40, 'Must not exceed 15 characters'],
 		minlength: [5, 'Must nto be less than 5 characters']
 	},
+		// referencing 
+	teacher: [
+		{
+		type: mongoose.Schema.ObjectId,
+		ref: 'User'
+		}
+	],
 	duration:{
 		type: Number,
 		required: [true,'Course duration must be entered']
@@ -75,6 +82,7 @@ const courseSchema = new mongoose.Schema({
 	startDates: [Date]
 
 },
+
 {
 	toJSON: {virtuals: true},
 	toObject: {virtuals: true}
@@ -107,6 +115,15 @@ courseSchema.post('save', function(course, next){
 	console.log("Slug for this course is ",this.slug);
 	next();
 });
+
+//Embedding the Teachers in the course, this is not by referencing.
+/*
+courseSchema.pre('save', async function(next){
+	const teacherPromises = this.teacher.map(async id =>await User.findById(id));
+	this.teacher = await Promise.all(teacherPromises);
+	next();
+});
+*/
 const Course = mongoose.model('Course',courseSchema);
 /*
 const testCourse = new Course({
