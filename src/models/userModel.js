@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const studentSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'please enter the name']
@@ -46,26 +46,26 @@ const studentSchema = new mongoose.Schema({
   passwordResetExpires: Date
 });
 // checks if the password is being updated or not
-studentSchema.pre('save', async function(next){
+userSchema.pre('save', async function(next){
   if(!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password,12);
   this.passwordConfirm = undefined;
   next();
 });
 //
-studentSchema.pre('save', function(next){
+userSchema.pre('save', function(next){
   if(!this.isModified('password') || this.isNew) return next();
 
   this.passwordChanged = Date.now() - 1000;
   next();
 });
-studentSchema.pre('find', function(next){
+userSchema.pre('find', function(next){
   this.find({currentStatus: {$ne:false}  });
   next();  
 });
 //checks if the passwordChanged exists,
 // else no need to do comparison of dates
-studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
+userSchema.methods.lastChangedPassword = function(JWTTimestamp){
   if(this.passwordChanged){
     const changedTimestamp = parseInt(this.passwordChanged.getTime() /1000,10);   
     console.log(changedTimestamp, "########### <<< ###########" ,JWTTimestamp); 
@@ -75,11 +75,11 @@ studentSchema.methods.lastChangedPassword = function(JWTTimestamp){
   console.log("this.passwordChanged ", this.passwordChanged);
   return false;
 };
-studentSchema.methods.checkPassword = async function(enteredPassword, studentPassword){
-  return await bcrypt.compare(enteredPassword,studentPassword);
+userSchema.methods.checkPassword = async function(enteredPassword, userPassword){
+  return await bcrypt.compare(enteredPassword,userPassword);
 };
 
-studentSchema.methods.passwordResetToken = function(){
+userSchema.methods.passwordResetToken = function(){
   const localResetToken = crypto.randomBytes(32).toString('hex');
   this.resetToken = crypto.createHash('sha256').update(localResetToken).digest('hex');
   this.passwordResetExpires = Date.now() + 10* 60 * 1000;
@@ -88,6 +88,6 @@ studentSchema.methods.passwordResetToken = function(){
   return localResetToken;
 
 }
-const Student = mongoose.model('Student',studentSchema);
+const User = mongoose.model('User',userSchema);
 
-module.exports = Student;
+module.exports = User;

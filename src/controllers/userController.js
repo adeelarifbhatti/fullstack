@@ -1,5 +1,5 @@
 const tryCatch = require('./../lib/tryCatch');
-const Student = require('./../models/studentModel');
+const User = require('./../models/userModel');
 const appErrors = require('./../lib/appErrors');
 /*const fs = require('fs');
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));*/
@@ -12,38 +12,38 @@ const allowedUpdates =(obj, ...allowedFields) => {
 	return newObj;
 }
 
-exports.getStudents = tryCatch(async (req,res) => {
-	const student = await Student.find();
+exports.getUsers = tryCatch(async (req,res) => {
+	const user = await User.find();
 
 	res.status(400).json({
 		status: 'sucsess',
 		data:{
-			student
+			user
 		}
 	});
 });
 
 exports.deleteMe = tryCatch(async (req,res,next)=>{
-	console.log("Inside deleteStudent ");
-	const student = await Student.findByIdAndUpdate(req.student.id, {currentStatus: false});
+	console.log("Inside deleteUser ");
+	const user = await User.findByIdAndUpdate(req.user.id, {currentStatus: false});
 	res.status(204).json({
 		status: 'success',
 		data:{
-			data: 'Student has been deleted'	
+			data: 'User has been deleted'	
 		}
 	});
 
 });
 
-exports.updateStudentinfo = tryCatch(async (req,res,next) =>{
+exports.updateUserinfo = tryCatch(async (req,res,next) =>{
 	//password shoudln't be update from here
 	if(req.body.password || req.body.passwordConfirm){
 		return next(new appErrors('Please use the /updatepassword link',400));
 	}
-	// update the Student Information
-	const student = await Student.findById(req.student.id);
+	// update the User Information
+	const user = await User.findById(req.user.id);
 	const allowedValues = allowedUpdates(req.body, 'name', 'email');
-	const updatedStudent = await Student.findByIdAndUpdate(req.student.id, allowedValues,{
+	const updatedUser = await User.findByIdAndUpdate(req.user.id, allowedValues,{
 		new: true,
 		runValidators: true
 	});
@@ -51,30 +51,30 @@ exports.updateStudentinfo = tryCatch(async (req,res,next) =>{
 	res.status(400).json({
 		status: 'success',
 		data:{
-			student: updatedStudent			
+			user: updatedUser			
 		}
 	});
 });
 
-exports.addStudent = (req,res) => {
+exports.addUser = (req,res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'This is not implemented yet'
 	});
 };
-exports.getOnestudent = (req,res) => {
+exports.getOneuser = (req,res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'This is not implemented yet'
 	});
 };
-exports.deleteStudent = (req,res) => {
+exports.deleteUser = (req,res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'This is not implemented yet'
 	});
 };
-exports.updateStudent = (req,res) => {
+exports.updateUser = (req,res) => {
 	//password shoudln't be update from here
 
 	res.status(500).json({

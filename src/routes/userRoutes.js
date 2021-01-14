@@ -1,5 +1,5 @@
 const express = require('express');
-const studentController = require('../controllers/studentController');
+const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
 const router = express.Router();
@@ -9,17 +9,17 @@ router.patch('/resetpassword/:token',authController.resetPassword);
 router.post('/signup', authController.signup);
 router.post('/signin', authController.login);
 router.patch('/updatepassword', authController.secure, authController.updatePassword);
-router.patch('/updatestudentinfo', authController.secure, studentController.updateStudentinfo);
-router.delete('/deletestudent', authController.secure, studentController.deleteMe);
+router.patch('/updateuserinfo', authController.secure, userController.updateUserinfo);
+router.delete('/deleteuser', authController.secure, userController.deleteMe);
 
 
 router.route('/')
-	.get(studentController.getStudents)
-	.post(studentController.addStudent);
+	.get(userController.getUsers)
+	.post(userController.addUser);
 router.route('/:id')
-	.get(studentController.getOnestudent)
-	.delete(studentController.deleteStudent)
-	.patch(studentController.updateStudent);
+	.get(userController.getOneuser)
+	.delete(userController.deleteUser)
+	.patch(userController.updateUser);
 
 
 module.exports = router;

@@ -45,7 +45,7 @@ app.use((req,res,next) => {
 
 
 const courseRouter = require('./routes/courseRoutes');
-const studentRouter = require('./routes/studentRoutes');
+const userRouter = require('./routes/userRoutes');
 /*app.get('/', (req,res)=> {
 res.status(200).send("Hellp from server side");
 });
@@ -67,7 +67,7 @@ app.post('/api/v1/courses',addCourse);
 app.get('/api/v1/courses/:id',getOneCourse);*/
 
 app.use('/api/v1/courses', courseRouter);
-app.use('/api/v1/students', studentRouter);
+app.use('/api/v1/users', userRouter);
 
 app.all('*',(req,res,next) => {
 	/*res.status(404).json({
