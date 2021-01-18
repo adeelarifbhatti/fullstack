@@ -14,6 +14,9 @@ exports.getAllReviews = tryCatch(async(req,res,next) => {
 
 });
 exports.createReview = tryCatch(async(req,res,next)=>{
+    //if these parameters are not in the body then initializing them
+    if(!req.body.course) req.body.course = req.params.courseId;
+    if(!req.body.user) req.body.user = req.user.id;
     const newReview = await Review.create(req.body);
     res.status(201).json({
         status: 'success',

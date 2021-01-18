@@ -1,6 +1,7 @@
 const express = require('express');
 const courseController = require('../controllers/courseController');
 const authController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
 
 const router = express.Router();
  
@@ -28,5 +29,9 @@ router.route('/:id')
 		authController.limitedTo('admin', 'teacher'),
 		courseController.deleteCourse)
 	.patch(courseController.updateCourse);
+router.route('/:courseId/reviews')
+	.post(authController.secure,
+	authController.limitedTo('student'),
+	reviewController.createReview);
 
 module.exports = router;
