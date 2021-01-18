@@ -125,7 +125,7 @@ exports.addCourse = tryCatch(async (req,res,next) =>{
 });
 exports.getOneCourse = tryCatch(async (req,res,next) => {
 	//adding populate for referencing
-	const course = await Course.findById(req.params.id).populate('teacher');
+	const course = await Course.findById(req.params.id).populate('teacher').populate('reviews');
 	if(!course){
 		return next(new catchError('no Course was found', 404));
 	}

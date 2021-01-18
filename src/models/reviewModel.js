@@ -21,15 +21,20 @@ const reviewSchema = new mongoose.Schema({
         required: [true, 'review from a user']
     }
 
+},
+{
+	toJSON: {virtuals: true},
+	toObject: {virtuals: true}
 });
 reviewSchema.pre(/^find/, function(next){
-    this.populate({
+    // too much data in virtual populate, it was nexted and populating alot
+    /*this.populate({
         path: 'course',
         select: 'name'
-    }),
+    }),*/
     this.populate({
         path: 'user',
-        salect: 'name'
+        select: 'name'
     });
     next();
 });

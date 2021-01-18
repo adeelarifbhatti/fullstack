@@ -68,7 +68,11 @@ const courseSchema = new mongoose.Schema({
 	slug: {
 		type: String,
 
-	},
+	},/*
+	This is how it is done in child referencing
+	reviews: [{ type: mongoose.Schema.ObjectId,
+		ref: 'Review' }],
+		*/
 	mainImage: {
 		type: String,
 		required: [true, 'Image must be entered']
@@ -91,6 +95,13 @@ courseSchema.virtual('Weeks').get(function(){
 	return this.duration / 7;
 
 });
+// Virtual Populate
+courseSchema.virtual('reviews', {
+	ref: 'Review',
+	foreignField: 'course',
+	localField: '_id'	
+});
+
 courseSchema.pre('save', function(next){
 	this.slug = slugify(this.name, {lower: true});
 	next();
@@ -115,6 +126,7 @@ courseSchema.post('save', function(course, next){
 	console.log("Slug for this course is ",this.slug);
 	next();
 });
+
 
 //Embedding the Teachers in the course, this is not by referencing.
 /*
