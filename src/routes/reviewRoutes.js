@@ -9,8 +9,11 @@ const router = express.Router({mergeParams: true });
 // ro
 router.route('/')
     .get(reviewController.getAllReviews)
-   .post(authController.secure,authController.limitedTo('student'),
+    .post(authController.secure,authController.limitedTo('student'),
         reviewController.createReview);
 
+router.route('/:id')
+    .delete(reviewController.deleteReview);
 
-        module.exports=router;
+
+module.exports=router;
