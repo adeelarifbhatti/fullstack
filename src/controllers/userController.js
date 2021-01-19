@@ -1,6 +1,7 @@
 const tryCatch = require('./../lib/tryCatch');
 const User = require('./../models/userModel');
 const appErrors = require('./../lib/appErrors');
+const factoryHandler = require('./../controllers/factoryHandler');
 /*const fs = require('fs');
 const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));*/
 
@@ -68,12 +69,8 @@ exports.getOneuser = (req,res) => {
 		message: 'This is not implemented yet'
 	});
 };
-exports.deleteUser = (req,res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'This is not implemented yet'
-	});
-};
+exports.deleteUser = factoryHandler.deleteOne(User);
+
 exports.updateUser = (req,res) => {
 	//password shoudln't be update from here
 

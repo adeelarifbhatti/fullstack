@@ -1,6 +1,8 @@
 const tryCatch = require('./../lib/tryCatch');
 const Review = require('./../models/reviewModel');
 const appErrors = require('./../lib/appErrors');
+const factoryHandler = require('./../controllers/factoryHandler');
+
 
 exports.getAllReviews = tryCatch(async(req,res,next) => {
         // thanks to mergeParams
@@ -16,6 +18,8 @@ exports.getAllReviews = tryCatch(async(req,res,next) => {
     });
 
 });
+exports.deleteReview = factoryHandler.deleteOne(Review);
+
 exports.createReview = tryCatch(async(req,res,next)=>{
     // thanks to mergeParams
     //if these parameters are not in the body then initializing them

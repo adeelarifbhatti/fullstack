@@ -5,6 +5,7 @@ const Course = require('./../models/courseModel');
 const APIFeatures = require('./../lib/queryString');
 const tryCatch = require('./../lib/tryCatch');
 const catchError = require('./../lib/appErrors');
+const factoryHandler = require('./../controllers/factoryHandler');
 
 /*
 exports.checkCourseId = (req,res,next,id) => {
@@ -136,19 +137,7 @@ exports.getOneCourse = tryCatch(async (req,res,next) => {
 		}
 	});
 	});
-
-exports.deleteCourse = tryCatch(async (req,res,next) => {
-		const course = await Course.findByIdAndDelete(req.params.id);
-		if(!course){
-			return next(new catchError('no Course was found', 404));
-		}
-		res.status(204).json({
-		status: 'success',
-		data: {
-			course: null
-		}
-	});
-});
+exports.deleteCourse = factoryHandler.deleteOne(Course);
 exports.updateCourse =  tryCatch(async (req,res,next) => {
 
 		const course = await Course.findByIdAndUpdate(req.params.id,
