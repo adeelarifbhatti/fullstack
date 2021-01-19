@@ -98,17 +98,7 @@ exports.getCourses = tryCatch(async (req,res,next) => {
 		}
 	});
 });
-exports.addCourse = tryCatch(async (req,res,next) =>{
-	//const newCourse = awaits Course.create(req.body);
-
-		const newCourse =  new Course(req.body);
-	await newCourse.save();
-	res.status(200).json({
-		ststus: 'success',
-		data: {
-		course: newCourse
-		}
-	});
+exports.addCourse = factoryHandler.CreateOne(Course);
 /*	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
 	const newCourse = Object.assign({id: newId}, req.body);
@@ -123,7 +113,6 @@ exports.addCourse = tryCatch(async (req,res,next) =>{
 			});
 
 		});*/
-});
 exports.getOneCourse = tryCatch(async (req,res,next) => {
 	//adding populate for referencing
 	const course = await Course.findById(req.params.id).populate('teacher').populate('reviews');
@@ -138,22 +127,7 @@ exports.getOneCourse = tryCatch(async (req,res,next) => {
 	});
 	});
 exports.deleteCourse = factoryHandler.deleteOne(Course);
-exports.updateCourse =  tryCatch(async (req,res,next) => {
-
-		const course = await Course.findByIdAndUpdate(req.params.id,
-			req.body,{ new: true, runValidators: true});
-		if(!course){
-			return next(new catchError('no Course was found', 404));
-		}
-
-		res.status(200).json({
-		status: 'success',
-		data: {
-			course: course
-		}
-	});
-
-});
+exports.updateCourse = factoryHandler.updateOne(Course);
 exports.getBusyMonth =  tryCatch(async (req,res,next) => {
 
 		const year = req.params.year * 1;

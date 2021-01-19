@@ -18,19 +18,13 @@ exports.getAllReviews = tryCatch(async(req,res,next) => {
     });
 
 });
-exports.deleteReview = factoryHandler.deleteOne(Review);
-
-exports.createReview = tryCatch(async(req,res,next)=>{
+exports.setIDs = tryCatch( async(req,res,next)=>{
     // thanks to mergeParams
     //if these parameters are not in the body then initializing them
     if(!req.body.course) req.body.course = req.params.courseId;
     if(!req.body.user) req.body.user = req.user.id;
-    const newReview = await Review.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        data: {
-            review: newReview
-        }
-    });
-
+    next();    
 });
+exports.deleteReview = factoryHandler.deleteOne(Review);
+exports.updateReview = factoryHandler.updateOne(Review);
+exports.createReview = factoryHandler.CreateOne(Review);

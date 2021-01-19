@@ -10,10 +10,11 @@ const router = express.Router({mergeParams: true });
 router.route('/')
     .get(reviewController.getAllReviews)
     .post(authController.secure,authController.limitedTo('student'),
-        reviewController.createReview);
+    reviewController.setIDs,reviewController.createReview);
 
 router.route('/:id')
-    .delete(reviewController.deleteReview);
+    .delete(reviewController.deleteReview) 
+    .patch(reviewController.updateReview);
 
 
 module.exports=router;

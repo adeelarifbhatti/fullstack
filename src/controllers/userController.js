@@ -69,13 +69,6 @@ exports.getOneuser = (req,res) => {
 		message: 'This is not implemented yet'
 	});
 };
+// These are for the Administrators
 exports.deleteUser = factoryHandler.deleteOne(User);
-
-exports.updateUser = (req,res) => {
-	//password shoudln't be update from here
-
-	res.status(500).json({
-		status: 'error',
-		message: 'This is not implemented yet'
-	});
-};
+exports.updateUser = factoryHandler.updateOne(User);

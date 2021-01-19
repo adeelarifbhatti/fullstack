@@ -13,3 +13,29 @@ exports.deleteOne = Model => tryCatch(async (req,res,next) => {
     }
     });
 });
+exports.CreateOne = Model => tryCatch(async (req,res,next) =>{
+	
+    const doc =  new Model(req.body);
+	await doc.save();
+	res.status(200).json({
+		ststus: 'success',
+		data: {
+		data: doc
+		}
+    });
+});
+exports.updateOne = Model => tryCatch(async (req,res,next) => {
+    const doc  = await Model.findByIdAndUpdate(req.params.id,
+        req.body,{ new: true, runValidators: true});
+    if(!doc){
+        return next(new catchError('no Document was found', 404));
+    }
+
+    res.status(200).json({
+    status: 'success',
+    data: {
+        data: doc
+    }
+});
+
+});
