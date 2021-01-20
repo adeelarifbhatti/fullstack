@@ -31,7 +31,7 @@ app.use(express.static(`${__dirname}/public`));
 app.use(helmet());
 //middle for rate limiting
 const limiter = rateLimit({
-	max: 20,
+	max: 100,
 	windowMs: 60*60*1000,
 	message: 'Too many requests, please edit limiter in app.js'
 });

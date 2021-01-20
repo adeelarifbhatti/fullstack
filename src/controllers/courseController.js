@@ -2,7 +2,7 @@
 //const courses = JSON.parse(fs.readFileSync(`${__dirname}/../fake-data/data/courses.json`));
 
 const Course = require('./../models/courseModel');
-const APIFeatures = require('./../lib/queryString');
+//const APIFeatures = require('./../lib/queryString');
 const tryCatch = require('./../lib/tryCatch');
 const catchError = require('./../lib/appErrors');
 const factoryHandler = require('./../controllers/factoryHandler');
@@ -34,7 +34,8 @@ exports.topDuration = async (req,res,next) => {
 	req.query.sort = '-duration';
 	next();
 }
-exports.getCourses = tryCatch(async (req,res,next) => {
+exports.getCourses = factoryHandler.getAll(Course);
+/*
 
 		/* editing the query
 		const queryObj = {...req.query};
@@ -87,6 +88,8 @@ exports.getCourses = tryCatch(async (req,res,next) => {
 
 		}
 		*/
+	/* Commenting following as getAll is implemented
+	tryCatch(async (req,res,next) => {
 		const features = new APIFeatures(Course.find(), req.query)
 		.editing().sorting().fields().paginate();
 		const courses = await features.query;
@@ -97,7 +100,8 @@ exports.getCourses = tryCatch(async (req,res,next) => {
 			courses
 		}
 	});
-});
+});*/
+
 exports.addCourse = factoryHandler.CreateOne(Course);
 /*	//console.log(res.body);
 	const newId = courses[courses.length -1].id + 1;
@@ -113,19 +117,7 @@ exports.addCourse = factoryHandler.CreateOne(Course);
 			});
 
 		});*/
-exports.getOneCourse = tryCatch(async (req,res,next) => {
-	//adding populate for referencing
-	const course = await Course.findById(req.params.id).populate('teacher').populate('reviews');
-	if(!course){
-		return next(new catchError('no Course was found', 404));
-	}
-	res.status(200).json({
-		status: 'success',
-		data: {
-			course
-		}
-	});
-	});
+exports.getOneCourse = factoryHandler.getOne(Course, [{ path: 'reviews'}, {path: 'teacher'}]);
 exports.deleteCourse = factoryHandler.deleteOne(Course);
 exports.updateCourse = factoryHandler.updateOne(Course);
 exports.getBusyMonth =  tryCatch(async (req,res,next) => {

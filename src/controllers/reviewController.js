@@ -4,6 +4,7 @@ const appErrors = require('./../lib/appErrors');
 const factoryHandler = require('./../controllers/factoryHandler');
 
 
+/*Before from factory 
 exports.getAllReviews = tryCatch(async(req,res,next) => {
         // thanks to mergeParams
     let filter = {};
@@ -17,7 +18,9 @@ exports.getAllReviews = tryCatch(async(req,res,next) => {
         }
     });
 
-});
+});*/
+exports.getAllReviews = factoryHandler.getAll(Review);
+exports.getOneReview = factoryHandler.getOne(Review);
 exports.setIDs = tryCatch( async(req,res,next)=>{
     // thanks to mergeParams
     //if these parameters are not in the body then initializing them
