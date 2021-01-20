@@ -11,6 +11,7 @@ router.post('/signin', authController.login);
 router.patch('/updatepassword', authController.secure, authController.updatePassword);
 router.patch('/updateuserinfo', authController.secure, userController.updateUserinfo);
 router.delete('/deleteuser', authController.secure, userController.deleteMe);
+router.get('/me', authController.secure, userController.getMe,userController.getOneuser);
 
 
 router.route('/')

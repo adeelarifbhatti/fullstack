@@ -57,6 +57,10 @@ exports.updateUserinfo = tryCatch(async (req,res,next) =>{
 		}
 	});
 });
+exports.getMe = tryCatch(async(req,res,next) => {
+	req.params.id = req.user.id;
+	next();
+});
 
 exports.addUser = (req,res) => {
 	res.status(500).json({
