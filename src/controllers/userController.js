@@ -13,6 +13,7 @@ const allowedUpdates =(obj, ...allowedFields) => {
 	return newObj;
 }
 
+/* From factory
 exports.getUsers = tryCatch(async (req,res) => {
 	const user = await User.find();
 
@@ -23,7 +24,7 @@ exports.getUsers = tryCatch(async (req,res) => {
 		}
 	});
 });
-
+*/
 exports.deleteMe = tryCatch(async (req,res,next)=>{
 	console.log("Inside deleteUser ");
 	const user = await User.findByIdAndUpdate(req.user.id, {currentStatus: false});
@@ -63,12 +64,15 @@ exports.addUser = (req,res) => {
 		message: 'This is not implemented yet'
 	});
 };
+/* From Factory
 exports.getOneuser = (req,res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'This is not implemented yet'
 	});
-};
+};*/
+exports.getOneuser = factoryHandler.getOne(User);
+exports.getUsers = factoryHandler.getAll(User);
 // These are for the Administrators
 exports.deleteUser = factoryHandler.deleteOne(User);
 exports.updateUser = factoryHandler.updateOne(User);
