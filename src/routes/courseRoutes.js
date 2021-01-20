@@ -13,16 +13,14 @@ router.param('id',(req,res,next,identity)=>{
 
 router.route('/coursestats')
 .get(courseController.getCourseStat);
-
-router.route('/busymonth/:year')
-.get(courseController.getBusyMonth);
-
 router.route('/top-duration')
 	.get(courseController.topDuration, courseController.getCourses);
 router.route('/')
-	.get(authController.secure,courseController.getCourses)
+	.get(courseController.getCourses)
 	//.post(courseController.checkCourseProperties
 	.post(courseController.addCourse);
+router.route('/busymonth/:year')
+	.get(authController.secure,courseController.getBusyMonth);
 router.route('/:id')
 	.get(courseController.getOneCourse)
 	.delete(authController.secure,

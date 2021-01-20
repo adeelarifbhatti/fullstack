@@ -8,12 +8,14 @@ router.post('/lostpassword',authController.lostPassword);
 router.patch('/resetpassword/:token',authController.resetPassword);
 router.post('/signup', authController.signup);
 router.post('/signin', authController.login);
+
+router.use(authController.secure);
 router.patch('/updatepassword', authController.secure, authController.updatePassword);
 router.patch('/updateuserinfo', authController.secure, userController.updateUserinfo);
 router.delete('/deleteuser', authController.secure, userController.deleteMe);
 router.get('/me', authController.secure, userController.getMe,userController.getOneuser);
 
-
+router.use(authController.limitedTo('teacher', 'admin'));
 router.route('/')
 	.get(userController.getUsers)
 	.post(userController.addUser);
