@@ -28,6 +28,7 @@ const reviewSchema = new mongoose.Schema({
 	toJSON: {virtuals: true},
 	toObject: {virtuals: true}
 });
+reviewSchema.index({course: 1, user: 1}, {unique:true});
 reviewSchema.pre(/^find/, function(next){
     // too much data in virtual populate, it was nexted and populating alot
     /*this.populate({
@@ -69,6 +70,8 @@ reviewSchema.statics.calAverageRating = async function(courseId){
 
     }
 };
+
+
 reviewSchema.post('save', function(){
     this.constructor.calAverageRating(this.course);
 });
