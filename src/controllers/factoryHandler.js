@@ -18,9 +18,13 @@ exports.getAll = Model => tryCatch(async (req,res,next) => {
     const features = new APIFeatures(Model.find(), req.query)
     .editing().sorting().fields().paginate();
     const doc = await features.query;
+    // To examine the Query we use .explain() and analyse the executionstatistic
+    // And then create indexes
+    //const doc = await features.query.explain();  
+    console.log(Model.length);
     res.status(200).json({
     status: 'success',
-    results: Model.length,
+    results: doc.length,
     data: {
     data: doc
     }

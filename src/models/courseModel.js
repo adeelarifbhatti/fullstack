@@ -102,6 +102,8 @@ courseSchema.virtual('reviews', {
 	localField: '_id'
 	
 });
+//Index for duration to speedup the search 
+courseSchema.index({duration: 1});
 
 courseSchema.pre('save', function(next){
 	this.slug = slugify(this.name, {lower: true});
