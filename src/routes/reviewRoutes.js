@@ -14,8 +14,8 @@ router.route('/')
 
 router.route('/:id')
     .get(reviewController.getOneReview)
-    .delete(authController.limitedTo('student'),reviewController.deleteReview) 
-    .patch(authController.limitedTo('student'),reviewController.updateReview);
+    .delete(authController.secure,authController.limitedTo('student'),reviewController.deleteReview) 
+    .patch(authController.secure,authController.limitedTo('student'),reviewController.updateReview);
 
 
 module.exports=router;

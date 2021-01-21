@@ -50,6 +50,13 @@ const courseSchema = new mongoose.Schema({
 		type: Number,
 		required: [true, 'Fee of the course must be entered']
 	},
+	averageRating: { 
+		type: Number
+	},
+	quantityRating: { 
+		type: Number
+	},
+
 	discount: {
 		type: Number,
 		validate:{

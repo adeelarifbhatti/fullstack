@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Course = require('./courseModel');
+const courseModel = require('./courseModel');
 const reviewSchema = new mongoose.Schema({
     comment: {
         type: String,
@@ -37,6 +39,49 @@ reviewSchema.pre(/^find/, function(next){
         select: 'name'
     });
     next();
+});
+reviewSchema.statics.calAverageRating = async function(courseId){
+    const stat = await this.aggregate([
+    {
+        $match: {course: courseId}
+    },
+    {
+        $group: {
+            _id: '$course',
+            nrating: {$sum: 1},
+            avgRating: { $avg: '$rating'}            
+        }
+    }
+
+    ]);
+    console.log("From calAverageRating reviewModel ",stat);
+    if( stat.length >0){
+    await courseModel.findByIdAndUpdate(courseId, {
+        averageRating: stat[0].avgRating,
+        quantityRating: stat[0].nrating
+    });
+    }
+    else {
+    await courseModel.findByIdAndUpdate(courseId, {
+        averageRating: 0,
+        quantityRating: 4.5
+        });
+
+    }
+};
+reviewSchema.post('save', function(){
+    this.constructor.calAverageRating(this.course);
+});
+// findByIdAndUpdate or Delete
+reviewSchema.pre(/^findOneAnd/,async function(next){
+    // This would not work in post because bythen the query would already been executed and we won't find
+    //findOne
+    // storing the model object in the this.r so that we can pass into the next middleware
+     this.r = await this.findOne();
+     next();
+});
+reviewSchema.post(/^findOneAnd/, async function(){
+    await this.r.constructor.calAverageRating(this.r.course);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
