@@ -9,6 +9,9 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 
 const app = express();
+app.set('view engine', 'pug');
+app.set('views',path.join(__dirname,'views'));
+
 console.log("Environment is  ", process.env.NODE_ENV);
 // full APP wide  middleware
 if(process.env.NODE_ENV === 'development'){
@@ -61,7 +64,11 @@ res.status(200).send("You can post here");
 /*app.get('/api/v1/courses',getCourses);
 app.post('/api/v1/courses',addCourse);
 app.get('/api/v1/courses/:id',getOneCourse);*/
+// Routes
 
+app.get('/',(req,res)=> {
+	res.status(200).render('base');
+});
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/users', userRouter);
