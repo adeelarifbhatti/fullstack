@@ -16,6 +16,13 @@ exports.getOverview = tryCatch(async(req,res,next)=> {
         courses
     });
    });
+   
+exports.getLogin = tryCatch(async(req,res,next)=> {
+
+	res.status(200).render('login', {
+        title: 'Login From Adeel',
+    });
+   });
 
 
 
