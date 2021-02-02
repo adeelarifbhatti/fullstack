@@ -10,6 +10,7 @@ services:
    #//- ./public/lib/bootstrap/dist/css/bootstrap.min.css:/usr/src/app/public/lib/bootstrap/dist/css/bootstrap.min.css
   ports:
    - "80:5000"
+   - "443:443"
   links:
    - my-mongo
   depends_on:

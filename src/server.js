@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
-
-// Don't work for some reason
 const dotenv = require('dotenv');
+const https = require('https');
+const fs = require('fs');
+
+var privateKey = fs.readFileSync(`${__dirname}/ssl/key.pem` );
+var certificate = fs.readFileSync(`${__dirname}/ssl/cert.pem`);
 dotenv.config({ path: `${__dirname}/config.env` });
 const app = require('./app');
 process.on('uncaughtException', err=>{
@@ -25,12 +28,18 @@ mongoose.connect( process.env.DATABASE_LOCAL, {
 	console.log('Database is connected');
 });
 console.log("VARIABLE IN config.env VARIABLE ", process.env.VARIABLE);
-// Doesn't work
+
 //const port = process.env.PORT ;
 const port = process.env.PORT;
 const server = app.listen(port, () => {
 console.log (`Server started on port " + ${port}`);
 });
+
+const sslPort = process.env.SSLPORT;
+https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app).listen(sslPort);
 
 process.on('unhandledRejection', err=>{
 	console.log(err.name,err.message);
