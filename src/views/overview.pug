@@ -6,25 +6,28 @@ body
 
     //CONTENT
     section.section-features
-    .row
+
     each course in courses
-        h2=course.name
-        p.long-copy Number of seats for students are 
-          u=course.seats
-    .row
-      .col.span-1-of-5.span-box
-        ion-icon(name='airplane-outline')
-        p   This is the col span-1-of-5 section 
-      .col.span-1-of-5.span-box
-        ion-icon(name='airplane-outline')
-        p   This is the 2 col span-1-of-5 section 
-      .col.span-1-of-5.span-box
-        ion-icon(name='airplane-outline')
-        p  This is the 3 col span-1-of-5 section 
-      .col.span-1-of-5.span-box
-        ion-icon(name='airplane-outline')
-        p  This is the 4 ol span-1-of-5 section 
-      .col.span-1-of-5.span-box
-        ion-icon(name='airplane-outline')
-        p  This is the 5 col span-1-of-5 section 
+        .row
+          h2=course.name
+          p.long-copy Number of seats for students are 
+            u=course.seats
+        .row
+          .col.span-1-of-5.span-box
+            ion-icon(name='airplane-outline')
+            p Course Duration 
+             =course.duration
+                       
+          .col.span-1-of-5.span-box
+            ion-icon(name='airplane-outline')
+            p   This is the 2 col span-1-of-5 section 
+          .col.span-1-of-5.span-box
+            ion-icon(name='airplane-outline')
+            p  This is the 3 col span-1-of-5 section 
+          .col.span-1-of-5.span-box
+            ion-icon(name='airplane-outline')
+            p  This is the 4 ol span-1-of-5 section 
+          .col.span-1-of-5.span-box
+            ion-icon(name='airplane-outline')
+            p  This is the 5 col span-1-of-5 section 
 
