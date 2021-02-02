@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 html{
-    background-color: aqua;
+    background-color: rgb(77, 191, 226);
     color: black;
     font-family: 'Lato', 'Arial', 'sans.serif';
     font-size: 30px;
@@ -118,7 +118,8 @@ h2:after {
     margin-top: 10px;
 }
 .long-copy {
-    color: red;
+    color: #5e5756;
+    font-size: 20px;
     text-align: center;
     margin-bottom: 20px    
 }
@@ -127,8 +128,12 @@ h2:after {
 }
 .span-box p {
     color: blue;
-    background-color:tomato;
-    
+    background-color:aquamarine;
+    font-size: 20px;
+    color: #5e5756;
+    font-style: italic;
+    text-align: center;
+  
 }
 .section_two_ul {
     list-style: none;
