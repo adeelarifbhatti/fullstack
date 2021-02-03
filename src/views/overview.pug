@@ -9,20 +9,21 @@ body
 
     each course in courses
         .row
-          h2=course.name
+          h2.course-name=course.name
           p.long-copy Number of seats for students are 
             u=course.seats
         .row
           .col.span-1-of-3.span-box
             ion-icon(name='airplane-outline')
             p Course Duration 
-             =course.duration
-                       
+            p=course.duration                      
           .col.span-1-of-3.span-box
             ion-icon(name='airplane-outline')
-            p    col span-1-of-3 section 
+            p    Level 
+            p=course.level 
           .col.span-1-of-3.span-box
             ion-icon(name='airplane-outline')
-            p  col span-1-of-3 section 
-           
+            p  Fee 
+            p=course.fee 
+          
 
