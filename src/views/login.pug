@@ -1,4 +1,12 @@
 extends parent
 
 block content   
-    h1 Hello world
+    h4 Login into your Account
+    main.main
+        form.form1    
+            label(for='email') 
+            input.un(type='email', placeholder='your@domain.com',required)
+            label(for='password') 
+            input.pass(type='password',placeholder='********',required)
+            button.smbutton Login
+
