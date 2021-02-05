@@ -66,9 +66,13 @@ exports.login = tryCatch(async(req,res,next) => {
 });
 exports.secure = tryCatch(async(req, res,next) =>{
   let token;
-  // check if Token is there, read it
+  // check if Token is there in authhrization, read it
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+    }
+    //Following checks of the cookies.jwt exist in the header if authorization header doesn't have token
+    else if(req.cookie,jwt){
+      token = req.cookies.jwt
     }
     console.log(token);
     if(!token) {

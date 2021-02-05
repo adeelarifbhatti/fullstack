@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieparser = require('cookie-parser'); 
 
 const app = express();
 app.set('view engine', 'pug');
@@ -20,6 +21,9 @@ if(process.env.NODE_ENV === 'development'){
 }
 // body parser into req.body
 app.use(express.json());
+// following is for using the reading the cookies from the header
+app.use(cookieparser());
+
 // data sanitization against nosql query injections
 app.use(mongoSanitize());
 // data sanitization against cross site scripts
@@ -44,6 +48,7 @@ app.use('/api',limiter);
 app.use((req,res,next) => {
 	req.requestTime = new Date().toISOString();
 	console.log(req.headers);
+	console.log(req.cookies);
 	next();
 });
 
