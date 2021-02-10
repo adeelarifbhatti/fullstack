@@ -1,10 +1,9 @@
-import '@babel/polyfill'
 import axios from 'axios';
 export const login = async(email,password) => {
     try{
         const res = await axios({
             method: 'POST',
-            url: 'https://mol.uio.no/api/v1/users/signin',
+            url: 'https://localhost/api/v1/users/signin',
             data: {
                 email,
                 password
