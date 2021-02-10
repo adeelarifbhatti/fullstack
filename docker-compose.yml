@@ -7,6 +7,7 @@ services:
    dockerfile: Dockerfile
   volumes:
    - ./src:/usr/src/app/src
+   - ./package.json:/usr/src/app/package.json
    #//- ./public/lib/bootstrap/dist/css/bootstrap.min.css:/usr/src/app/public/lib/bootstrap/dist/css/bootstrap.min.css
   ports:
    - "80:5000"
