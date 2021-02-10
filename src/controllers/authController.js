@@ -17,7 +17,7 @@ const sendToken =(user,statusCode,res) =>{
     expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_IN * 24 * 60 * 60 * 1000), 
     httpOnly: true 
   };
-  if (process.env.NODE_ENV==='production') cookieProperties.secure=true;
+  if (process.env.NODE_ENV==='development') cookieProperties.secure=true;
   const token = signToken(user._id);
   res.cookie('jwt', token, cookieProperties);
   // to remove the password so it doesn't appear in the output
@@ -71,7 +71,7 @@ exports.secure = tryCatch(async(req, res,next) =>{
     token = req.headers.authorization.split(' ')[1];
     }
     //Following checks of the cookies.jwt exist in the header if authorization header doesn't have token
-    else if(req.cookie,jwt){
+    else if(req.cookies.jwt){
       token = req.cookies.jwt
     }
     console.log(token);
@@ -94,6 +94,32 @@ exports.secure = tryCatch(async(req, res,next) =>{
   req.user = currentUser;
   console.log(currentUser);
   next();
+});
+
+// following method if for rendered pages i.e. checking if the user is loggedin or not
+exports.loggedInCheck = tryCatch(async(req, res,next) =>{
+  if(req.cookies.jwt){   
+  //Verify the Token
+  const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+  console.log("Decoded.id   ",decoded.id);
+  //check if user still exists
+  const  currentUser = await User.findById(decoded.id);
+  console.log("Inside secure    ",currentUser)
+  if(!currentUser){
+    return  next();
+  };
+  //check is user changed the password after sending the token
+  if(currentUser.lastChangedPassword(decoded.iat)){
+  return next();
+  }
+  //There is a loggedin User.
+  //Each template will have access to res.locals hence therefore will have access to res.locals.user
+  res.locals.user = currentUser;
+  console.log("This is from loggedInCheck",res.locals.user);
+  return next();
+};
+ next();
+
 });
 
 exports.limitedTo =(...roles) => {

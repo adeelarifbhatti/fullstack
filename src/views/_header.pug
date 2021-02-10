@@ -11,15 +11,26 @@ header
     .row
       img.logo(src='resources/css/img/logo.png' alt='logo')
       ul.main-nav
-        li
-          a(href='#')  First 
-        li
-          a(href='#')  Second 
-        li
-          a(href='#')  Third 
-  .div-one
-    a.btn.btn-full(href='#') Teachers 
-    a.btn.btn-ghost(href='/login') Login 
+        if user
+          li
+            a(href='#')=user.name 
+          li
+            a(href='#') user.photo 
+          li
+            a(href='#') user.picture 
+          .div-one
+            a.btn.btn-full(href='#') Name 
+            a.btn.btn-ghost(href='/logout') logout 
+        else
+          li
+            a(href='#')  First 
+          li
+            a(href='#')  Second 
+          li
+            a(href='#')  Third 
+          .div-one
+            a.btn.btn-full(href='#') Teachers 
+            a.btn.btn-ghost(href='/login') Login 
 .row
   section.section-features
     .row

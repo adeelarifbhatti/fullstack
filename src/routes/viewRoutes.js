@@ -4,9 +4,10 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+router.use(authController.loggedInCheck);
 router.get('/', viewController.getLogin);
 router.get('/login', viewController.getLogin);
 
-router.get('/overview',authController.secure, viewController.getOverview);
+router.get('/overview', viewController.getOverview);
 
 module.exports = router;
