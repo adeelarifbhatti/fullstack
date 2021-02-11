@@ -31,7 +31,7 @@ const sendToken =(user,statusCode,res) =>{
   });
 };
 exports.signout = (req,res) => {
-  res.cookie('jwt','',{
+  res.cookie('jwt','hello',{
     expires: new Date(Date.now() +10 *100),
     httpOnly: true
   });
@@ -104,8 +104,9 @@ exports.secure = tryCatch(async(req, res,next) =>{
 });
 
 // following method if for rendered pages i.e. checking if the user is loggedin or not
-exports.loggedInCheck = tryCatch(async(req, res,next) =>{
+exports.loggedInCheck = async(req, res,next) =>{
   if(req.cookies.jwt){   
+    try {
   //Verify the Token
   const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
   console.log("Decoded.id   ",decoded.id);
@@ -124,10 +125,13 @@ exports.loggedInCheck = tryCatch(async(req, res,next) =>{
   res.locals.user = currentUser;
   console.log("This is from loggedInCheck",res.locals.user);
   return next();
+  } catch(err){
+    return next();
+  }
 };
  next();
 
-});
+};
 
 exports.limitedTo =(...roles) => {
   return(req,res,next) => {
