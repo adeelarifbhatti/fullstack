@@ -28,9 +28,16 @@ const sendToken =(user,statusCode,res) =>{
     data: {
       user
     }
-
   });
 };
+exports.signout = (req,res) => {
+  res.cookie('jwt','',{
+    expires: new Date(Date.now() +10 *100),
+    httpOnly: true
+  });
+  res.status(200).json({status: 'success'});
+};
+
 exports.signup = tryCatch( async (req,res,next) =>{
   const newUser = await User.create({
     name: req.body.name,
