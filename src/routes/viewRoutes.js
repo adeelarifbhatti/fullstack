@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(authController.loggedInCheck);
 router.get('/', viewController.getLogin);
 router.get('/login', viewController.getLogin);
+router.get('/course/:slug',viewController.getfullCourse);
 
 router.get('/overview', viewController.getOverview);
 
