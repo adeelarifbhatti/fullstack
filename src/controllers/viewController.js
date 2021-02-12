@@ -1,5 +1,6 @@
 const Course = require('../models/courseModel');
 const tryCatch = require('../lib/tryCatch');
+const appErrors = require('./../lib/appErrors');
 
 exports.getLogin = (req,res)=> {
 	res.status(200).render('login', {
@@ -22,6 +23,9 @@ exports.getOverview = tryCatch(async(req,res,next)=> {
     const course = await Course.findOne({slug: req.params.slug});
     console.log("From viewController getOverview ",course);
     // Build Template
+    if(!course){
+        return next(new appErrors('There is no course', 404));
+    }
 	res.status(200).render('fullCourse', {
         title: 'Course Details',
         course

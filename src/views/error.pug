@@ -1,0 +1,22 @@
+head
+
+    title #{title}
+
+body    
+    //Header
+    include _header
+
+    //Content
+    block content
+        h2 Error Status 
+            =msg
+        h2=title
+    
+
+
+    //Footer
+    include _footer
+
+    //- script(src='vendors/js/axios.js')
+    //- script(src='resources/js/login.js')
+    script(src='/resources/js/bundle.js')

@@ -19,7 +19,7 @@ const duplicatevalues = (err) =>{
 	return new appErrors(message,400);
 };
 
-	const logsForProd = (err,res) => {
+	const logsForProd = (err,req,res) => {
 		if(err.isOperational){
 			res.status(err.statusCode).json({
 			status: err.status,
@@ -35,32 +35,43 @@ const duplicatevalues = (err) =>{
 		};
 	};
 
-	const logsForDev = (err,res) => {
-		console.log("ERROR is\n ",err, "\n END of ERROR")
-		res.status(err.statusCode).json({
-		logs: "These are from my error handling",
-		status: err.status,
-		error: err,
-		message: err.message,
-		stack: err.stack
-	});
-
-	};
-	console.log(err.stack);
-	console.log(err.statusCode = err.statusCode || 500);
-	console.log(err.status = err.status || 'error');
+	const logsForDev = (err,req,res) => {
+		// for API
+		if(req.originalUrl.startsWith('/api')){
+			console.log("ERROR is#########\n ",err, "\n ################END of ERROR")
+			res.status(err.status).json({
+			logs: "These are from my error handling",
+			status: err.statusCode,
+			error: err,
+			message: err.message,
+			stack: err.stack
+			});			
+			console.log("err.stack ",err.stack);
+			console.log(err.statusCode = err.statusCode || 500);
+			console.log(err.status = err.status || 'error');
+		}
+		// For web pages
+		else {
+			res.status(err.statusCode).render('error', {
+				title: 'Something went wrong',
+				msg: err.message
+			});
+		}
+	}
 
 if(process.env.NODE_ENV === 'development'){
 	let error = {...err};
+	error.message = err.message;
 	if(error.name === 'CastError') error =	castError(err);
 	if(error.code === 11000) error =	duplicatevalues(err);
 	if(error.name === 'JsonWebTokenError') error = myJsonWebTokenError();
 	if(error.name === 'TokenExpiredError') error = myTokenExpiredError();
 	
-		logsForDev(error,res);
+		logsForDev(error,req,res);
 }
 	else if (process.env.NODE_ENV === 'production') {
 		let error = {...err};
+		error.message = err.message;
 		if(error.name === 'CastError') error =	castError(error);
 		logsForProd(error,res);
 }
