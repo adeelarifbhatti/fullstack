@@ -9,10 +9,19 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieparser = require('cookie-parser'); 
+const cors = require('cors');
 
 const app = express();
 app.set('view engine', 'pug');
 app.set('views',path.join(__dirname,'views'));
+// Following is for the CORS policy, vue app could not get data before following,
+// Error was following
+// No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+//If an opaque response serves your needs, set the request's mode to 'no-cors' to 
+//fetch the resource with CORS disabled.
+app.use(cors({
+	origin: '*'
+  }));
 
 console.log("Environment is  ", process.env.NODE_ENV);
 // full APP wide  middleware
