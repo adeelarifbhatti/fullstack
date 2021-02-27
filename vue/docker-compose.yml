@@ -1,0 +1,13 @@
+version: "2.0"
+services:
+ node-adeel-vuesecond:
+  build:
+   context: .
+   dockerfile: ./Dockerfile
+  volumes:
+  -   ./src:/usr/src/app/src
+  -   ./public:/usr/src/app/public
+  -   ./vue.config.js:/usr/src/app/vue.config.js
+  -   ./package.json:/usr/src/app/package.json
+  ports:
+  -  "81:8080"

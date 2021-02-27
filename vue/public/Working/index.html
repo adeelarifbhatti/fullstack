@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, intial-scale=1.0">
+        <title>Vue or View</title>
+        <script src="https://unpkg.com/vue@3.0.2"></script>
+        <link rel="stylesheet" href="css/style.css">
+
+    </head>
+    <body>
+        <h1> Hello, Vue</h1>
+        <div id="app">
+                <div v-if="showData">
+                    <h2>I am Here</h2>
+                    <p>{{ title }}</p>
+                    <button style="float: left;" v-on:click="doSomeThing()">
+                        <span>Do SomeThing</span>
+                    </button>
+
+                    <li class="box0" v-on:click="isFavOff(course)" v-for="course in courses" :class="{fav: course.isFav}">
+                        <img :src="course.image" :alt=course.title></h3>
+                        <h3>{{course.title}}</h3>                        
+                    </li>
+                    <li class="box0" v-on:click="isFavOff(course)" v-for="course in filteredCourses" :class="{fav: course.isFav}">
+                        <img :src="course.image" :alt=course.title></h3>
+                        <h3>{{course.title}}</h3>                        
+                    </li>
+                </div>
+
+                <div style="float: left;">
+                    <button v-on:click="hideIt()">
+                    <span v-if="showData">Hide it</span>
+                    <span v-else>Show it</span>
+                    </button>
+                </div>
+                <!--
+                    Mouse Event
+                -->
+                <div class="box1" @dblclick="checkDoubleClick">
+                    position - {{x}}
+                    postion -  {{y}}
+                </div>
+                <div class="box2" @mouseleave="checkMouseLeave">
+                    position - {{x}}
+                    postion -  {{y}}
+                </div>
+                <div class="box3" @mouseover="checkMouseOver">
+                    position - {{x}}
+                    postion -  {{y}}>
+                    
+                </div>
+                <div class="box4" @mousemove="checkPX">
+                    position - {{x}}
+                    postion -  {{y}}>
+                    
+                </div>
+                
+        </div>
+
+        <script src=app.js></script>
+
+
+    </body>
+</html>

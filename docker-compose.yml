@@ -10,14 +10,24 @@ services:
    - ./package.json:/usr/src/app/package.json
    #//- ./public/lib/bootstrap/dist/css/bootstrap.min.css:/usr/src/app/public/lib/bootstrap/dist/css/bootstrap.min.css
   ports:
-   - "80:5000"
+   - "82:5000"
    - "443:443"
   links:
    - my-mongo
   depends_on:
    - my-mongo
-   
 
+ node-adeel-vuesecond:
+  build:
+   context: .
+   dockerfile: DockerfileVue
+  volumes:
+   - ./vue/src:/usr/src/vue/src
+   - ./vue/public:/usr/src/vue/public
+   - ./vue/package.json:/usr/src/vue/package.json
+   - ./vue/vue.config.js:/usr/src/vue/vue.config.js
+  ports:
+   -  "81:8080"
 
  my-mongo:
   image: mongo

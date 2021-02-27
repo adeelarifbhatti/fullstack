@@ -1,0 +1,51 @@
+ .box0{
+    display:inline-block;
+    padding: 100px 0;
+    margin-left: 30px;  
+    }
+.box1{
+    background-color: red;
+    padding: 100px 0;
+    text-align: center;
+    width: 400px;
+    display: inline-block;
+    margin: 20;
+}
+li {
+    list-style-type: none;
+    background: rgb(136, 98, 98);
+    margin: 20px auto;
+    padding: 7px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+li.fav {
+    color: blue
+}
+.box2{
+    background-color: blue;
+    padding: 100px 0;
+    text-align: center;
+    width: 400px;
+    display: inline-block;
+    margin: 20;
+}
+.box3{
+    background-color: green;
+    padding: 100px 0;
+    text-align: center;
+    width: 400px;
+    display: inline-block;
+    margin: 20;
+}
+.box4{
+    background-color: yellow;
+    padding: 100px 0;
+    text-align: center;
+    width: 400px;
+    display: inline-block;
+    margin: 20;
+}
